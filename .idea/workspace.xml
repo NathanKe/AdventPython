@@ -2,10 +2,7 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="327d01c5-54af-42d8-89c6-72f4a8a8253f" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/2015/02_answer.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/2015/02_input" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/answerTemplate.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -144,7 +141,14 @@
       <option name="project" value="LOCAL" />
       <updated>1574819142758</updated>
     </task>
-    <option name="localTasksCounter" value="3" />
+    <task id="LOCAL-00003" summary="15_02 complete">
+      <created>1574820428399</created>
+      <option name="number" value="00003" />
+      <option name="presentableId" value="LOCAL-00003" />
+      <option name="project" value="LOCAL" />
+      <updated>1574820428399</updated>
+    </task>
+    <option name="localTasksCounter" value="4" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -161,6 +165,7 @@
   <component name="VcsManagerConfiguration">
     <MESSAGE value="asdf" />
     <MESSAGE value="15_01 complete" />
-    <option name="LAST_COMMIT_MESSAGE" value="15_01 complete" />
+    <MESSAGE value="15_02 complete" />
+    <option name="LAST_COMMIT_MESSAGE" value="15_02 complete" />
   </component>
 </project>
