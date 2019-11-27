@@ -34,8 +34,5 @@ for x in range(0, 1000):
         p1 += gridp1[x][y]
         p2 += gridp2[x][y]
 
-
-
-
 print('Part 1:', p1)
 print('Part 2:', p2)
