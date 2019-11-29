@@ -29,7 +29,7 @@ def substitute_known_number(wire_list, value_dict):
     new_wire_list = []
     for wire in wire_list:
         for key, val in value_dict.items():
-            wire = re.sub(r"\b"+key+r"\b", val, wire)
+            wire = re.sub(r"\b" + key + r"\b", val, wire)
         new_wire_list.append(wire)
 
     return new_wire_list, value_dict
@@ -58,7 +58,7 @@ wires = list(map(lambda s: s.replace("RSHIFT", ">>"), wires))
 
 results = {}
 
-wires = list(map(lambda s: re.sub(r"(.+)(\s->\sb$)", p1+r"\2", s), wires))
+wires = list(map(lambda s: re.sub(r"(.+)(\s->\sb$)", p1 + r"\2", s), wires))
 
 while len(wires) > 0:
     wires, results = step(wires, results)

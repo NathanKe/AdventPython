@@ -16,7 +16,7 @@ def encode(str):
             result += '\\\\'
         else:
             result += ch
-    return '"'+result+'"'
+    return '"' + result + '"'
 
 
 expand_len = sum(map(len, list(map(encode, lines))))

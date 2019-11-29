@@ -9,7 +9,7 @@ puzzleStr = 'iwrupvqb'
 
 i = 0
 while True:
-    md5 = md5_first_n(puzzleStr+str(i), 5)
+    md5 = md5_first_n(puzzleStr + str(i), 5)
     if md5 == '00000':
         break
     else:
@@ -18,7 +18,7 @@ while True:
 print('Part 1:', i)
 
 while True:
-    md5 = md5_first_n(puzzleStr+str(i), 6)
+    md5 = md5_first_n(puzzleStr + str(i), 6)
     if md5 == '000000':
         break
     else:

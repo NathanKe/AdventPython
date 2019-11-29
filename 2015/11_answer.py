@@ -6,7 +6,7 @@ def str26_to_int10(s):
     exp = 0
     str_sum = 0
     for ch in rev:
-        str_sum += 26**exp * (ord(ch) - 97)
+        str_sum += 26 ** exp * (ord(ch) - 97)
         exp += 1
     return str_sum
 
@@ -32,7 +32,7 @@ def step_pswd(pswd):
 
 ascend_strs = []
 for i in range(24):
-    ascend_strs.append(chr(i+97)+chr(i+98)+chr(i+99))
+    ascend_strs.append(chr(i + 97) + chr(i + 98) + chr(i + 99))
 
 ascend_regex = re.compile('|'.join(ascend_strs))
 

@@ -17,11 +17,9 @@ def look_say_expand(string):
 for i in range(40):
     sx = look_say_expand(sx)
 
-
 print('Part 1: ', len(sx))
 
 for i in range(10):
     sx = look_say_expand(sx)
-
 
 print('Part 2: ', len(sx))

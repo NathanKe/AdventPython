@@ -16,8 +16,8 @@ for x in range(0, 1000):
 for instr in instructions:
     m = re.match(r"(turn on|turn off|toggle)\s(\d{1,3}),(\d{1,3})\sthrough\s(\d{1,3}),(\d{1,3})", instr)
     opt, leftX, bottomY, rightX, topY = m[1], int(m[2]), int(m[3]), int(m[4]), int(m[5])
-    for x in range(leftX, rightX+1):
-        for y in range(bottomY, topY+1):
+    for x in range(leftX, rightX + 1):
+        for y in range(bottomY, topY + 1):
             if opt == "turn on":
                 gridp1[x][y] = 1
                 gridp2[x][y] += 1
