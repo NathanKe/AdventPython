@@ -1,5 +1,3 @@
-import re
-
 input_codes = open('02_input').read().splitlines()
 
 
@@ -43,10 +41,10 @@ print('Part 1: ', calc_code(input_codes))
 
 movement_map = {
     "1": {
-        "U": "l",
+        "U": "1",
         "D": "3",
         "L": "1",
-        "R": "l"
+        "R": "1"
     },
     "2": {
         "U": "2",
@@ -123,38 +121,24 @@ movement_map = {
 }
 
 
-# def result_code(num, chain):
-#     for i in range(len(chain)):
-#         dr = chain[i]
-#         print(num, dr)
-#         nxt = movement_map[num][dr]
-#         print(nxt)
-#         num = nxt
-#     return num
-#
-#
-# def calc_code_2(code_seq):
-#     out = ''
-#     cur = '5'
-#     for code in code_seq:
-#         print(code)
-#         cur = result_code(cur, list(code))
-#         out += cur
-#     return out
+def result_code(num, chain):
+    for i in range(len(chain)):
+        dr = chain[i]
+        nxt = movement_map[num][dr]
+        num = nxt
+    return num
 
 
-#print('Part 2: ', calc_code_2(input_codes))
+def calc_code_2(code_seq):
+    out = ''
+    cur = '5'
+    for code in code_seq:
+        cur = result_code(cur, list(code))
+        out += cur
+    return out
 
-loc = '5'
-out_code = []
 
-for code in input_codes:
-    print(code)
-    for i in range(len(code)):
-        print(i, loc, code[i])
-        loc = movement_map[loc][code[i]]
-    out_code.append(loc)
+print('Part 2: ', calc_code_2(input_codes))
 
-print(out_code)
 
 
