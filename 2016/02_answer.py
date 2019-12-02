@@ -40,3 +40,121 @@ def calc_code(code_seq):
 
 
 print('Part 1: ', calc_code(input_codes))
+
+movement_map = {
+    "1": {
+        "U": "l",
+        "D": "3",
+        "L": "1",
+        "R": "l"
+    },
+    "2": {
+        "U": "2",
+        "D": "6",
+        "L": "2",
+        "R": "3"
+    },
+    "3": {
+        "U": "1",
+        "D": "7",
+        "L": "2",
+        "R": "4"
+    },
+    "4": {
+        "U": "4",
+        "D": "8",
+        "L": "3",
+        "R": "4"
+    },
+    "5": {
+        "U": "5",
+        "D": "5",
+        "L": "5",
+        "R": "6"
+    },
+    "6": {
+        "U": "2",
+        "D": "A",
+        "L": "5",
+        "R": "7"
+    },
+    "7": {
+        "U": "3",
+        "D": "B",
+        "L": "6",
+        "R": "8"
+    },
+    "8": {
+        "U": "4",
+        "D": "C",
+        "L": "7",
+        "R": "9"
+    },
+    "9": {
+        "U": "9",
+        "D": "9",
+        "L": "8",
+        "R": "9"
+    },
+    "A": {
+        "U": "6",
+        "D": "A",
+        "L": "A",
+        "R": "B"
+    },
+    "B": {
+        "U": "7",
+        "D": "D",
+        "L": "A",
+        "R": "C"
+    },
+    "C": {
+        "U": "8",
+        "D": "C",
+        "L": "B",
+        "R": "C"
+    },
+    "D": {
+        "U": "B",
+        "D": "D",
+        "L": "D",
+        "R": "D"
+    }
+}
+
+
+# def result_code(num, chain):
+#     for i in range(len(chain)):
+#         dr = chain[i]
+#         print(num, dr)
+#         nxt = movement_map[num][dr]
+#         print(nxt)
+#         num = nxt
+#     return num
+#
+#
+# def calc_code_2(code_seq):
+#     out = ''
+#     cur = '5'
+#     for code in code_seq:
+#         print(code)
+#         cur = result_code(cur, list(code))
+#         out += cur
+#     return out
+
+
+#print('Part 2: ', calc_code_2(input_codes))
+
+loc = '5'
+out_code = []
+
+for code in input_codes:
+    print(code)
+    for i in range(len(code)):
+        print(i, loc, code[i])
+        loc = movement_map[loc][code[i]]
+    out_code.append(loc)
+
+print(out_code)
+
+
