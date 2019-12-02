@@ -37,16 +37,16 @@ class Walker:
 
         cur_dir = self.dir_list[self.dir_ind]
         if cur_dir == 'N':
-            for i in range(1, step_len+1):
+            for i in range(1, step_len + 1):
                 self.visited.append((self.x_loc, self.y_loc + i))
         elif cur_dir == 'E':
-            for i in range(1, step_len+1):
+            for i in range(1, step_len + 1):
                 self.visited.append((self.x_loc + i, self.y_loc))
         elif cur_dir == 'S':
-            for i in range(1, step_len+1):
+            for i in range(1, step_len + 1):
                 self.visited.append((self.x_loc, self.y_loc - i))
         elif cur_dir == 'W':
-            for i in range(1, step_len+1):
+            for i in range(1, step_len + 1):
                 self.visited.append((self.x_loc - i, self.y_loc))
         self.x_loc, self.y_loc = self.visited[-1]
 
@@ -62,11 +62,10 @@ w = Walker(0, 0, 0)
 w.take_path(in_path)
 print('Part 1: ', w.dist_from_zero())
 
-
 first_visit_twice = None
 for i in range(1, len(w.visited)):
-    if w.visited[i] in w.visited[0:i-1]:
+    if w.visited[i] in w.visited[0:i - 1]:
         first_visit_twice = w.visited[i]
         break
 
-print('Part 2: ', first_visit_twice[0]+first_visit_twice[1])
+print('Part 2: ', first_visit_twice[0] + first_visit_twice[1])
