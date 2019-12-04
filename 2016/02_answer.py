@@ -139,6 +139,3 @@ def calc_code_2(code_seq):
 
 
 print('Part 2: ', calc_code_2(input_codes))
-
-
-
