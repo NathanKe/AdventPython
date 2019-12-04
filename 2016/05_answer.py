@@ -2,6 +2,7 @@ import hashlib
 
 base_id = 'cxdnnyjw'
 
+
 def md5_first_n(to_hash, n):
     return hashlib.md5(to_hash.encode()).hexdigest()[0:n]
 
@@ -33,6 +34,5 @@ while 'x' in res_pass:
         int_ind = int(ind)
         if res_pass[int_ind] == 'x':
             res_pass = res_pass[:int_ind] + cur_char + res_pass[(int_ind + 1):]
-
 
 print('Part 1', res_pass)
