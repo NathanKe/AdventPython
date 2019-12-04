@@ -1,5 +1,3 @@
-import re
-
 puzzle = '168630-718098'
 
 
