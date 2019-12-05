@@ -1,3 +1,5 @@
+import operator
+
 puzzle_code = [3, 225, 1, 225, 6, 6, 1100, 1, 238, 225, 104, 0, 1101, 37, 34, 224, 101, -71, 224, 224, 4, 224, 1002,
                223, 8, 223, 101, 6, 224, 224, 1, 224, 223, 223, 1002, 113, 50, 224, 1001, 224, -2550, 224, 4, 224, 1002,
                223, 8, 223, 101, 2, 224, 224, 1, 223, 224, 223, 1101, 13, 50, 225, 102, 7, 187, 224, 1001, 224, -224,
@@ -49,23 +51,23 @@ class IntCode:
     def run_instr(self):
         cmd = self.code[self.indx] % 100
         if cmd == 1:
-            self.ex_one()
+            self.ex_combine(operator.add)
         elif cmd == 2:
-            self.ex_two()
+            self.ex_combine(operator.mul)
         elif cmd == 3:
-            self.ex_three()
+            self.ex_put_input()
         elif cmd == 4:
-            self.ex_four()
+            self.ex_write_out()
         elif cmd == 5:
-            self.ex_five()
+            self.ex_jump_if(operator.truth)
         elif cmd == 6:
-            self.ex_six()
+            self.ex_jump_if(operator.not_)
         elif cmd == 7:
-            self.ex_seven()
+            self.ex_compare(operator.lt)
         elif cmd == 8:
-            self.ex_eight()
+            self.ex_compare(operator.eq)
         elif cmd == 99:
-            self.ex_ninetynine()
+            self.ex_halt()
 
     def get_nth_param(self, n):
         mode = (self.code[self.indx] // 10 ** (1 + n)) % 10
@@ -74,8 +76,6 @@ class IntCode:
 
     def get_n_params(self, n):
         assert 1 <= n <= 3
-        assert self.indx + n <= len(self.code)
-
         param1 = self.get_nth_param(1)
 
         if n == 2 or n == 3:
@@ -92,81 +92,39 @@ class IntCode:
     def run_code(self):
         while not self.halt:
             self.run_instr()
-        return self.outs
+        return self.outs[-1]
 
-    def ex_one(self):
+    def ex_combine(self, op):
         param1, param2, param3 = self.get_n_params(3)
-
-        self.code[param3] = self.code[param1] + self.code[param2]
-
+        self.code[param3] = op(self.code[param1], self.code[param2])
         self.indx += 4
 
-    def ex_two(self):
-        param1, param2, param3 = self.get_n_params(3)
-
-        self.code[param3] = self.code[param1] * self.code[param2]
-
-        self.indx += 4
-
-    def ex_three(self):
+    def ex_put_input(self):
         param1, _, _ = self.get_n_params(1)
-
         self.code[param1] = self.inp
-
         self.indx += 2
 
-    def ex_four(self):
+    def ex_write_out(self):
         param1, _, _ = self.get_n_params(1)
-
+        assert sum(self.outs) == 0
         self.outs.append(self.code[param1])
-
         self.indx += 2
 
-    def ex_five(self):
+    def ex_jump_if(self, op):
         param1, param2, _ = self.get_n_params(2)
-
-        if self.code[param1] != 0:
+        if op(self.code[param1]):
             self.indx = self.code[param2]
         else:
             self.indx += 3
 
-    def ex_six(self):
-        param1, param2, _ = self.get_n_params(2)
-
-        if self.code[param1] == 0:
-            self.indx = self.code[param2]
-        else:
-            self.indx += 3
-
-    def ex_seven(self):
+    def ex_compare(self, op):
         param1, param2, param3 = self.get_n_params(3)
-
-        if self.code[param1] < self.code[param2]:
-            self.code[param3] = 1
-        else:
-            self.code[param3] = 0
-
+        self.code[param3] = int(op(self.code[param1], self.code[param2]))
         self.indx += 4
 
-    def ex_eight(self):
-        param1, param2, param3 = self.get_n_params(3)
-
-        if self.code[param1] == self.code[param2]:
-            self.code[param3] = 1
-        else:
-            self.code[param3] = 0
-
-        self.indx += 4
-
-    def ex_ninetynine(self):
+    def ex_halt(self):
         self.halt = True
 
 
-def exec_int_code(inp, code):
-    ic = IntCode(inp, code)
-    ic.run_code()
-    return ic.outs[-1]
-
-
-print('Part 1: ', exec_int_code(1, puzzle_code))
-print('Part 2: ', exec_int_code(5, puzzle_code))
+print('Part 1: ', IntCode(1, puzzle_code).run_code())
+print('Part 2: ', IntCode(5, puzzle_code).run_code())
