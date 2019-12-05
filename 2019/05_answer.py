@@ -67,59 +67,63 @@ class IntCode:
         elif cmd == 99:
             self.ex_ninetynine()
 
+    def get_nth_param(self, n):
+        mode = (self.code[self.indx] // 10 ** (1 + n)) % 10
+        param = [self.code[self.indx + n], self.indx + n][mode]
+        return param
+
+    def get_n_params(self, n):
+        assert 1 <= n <= 3
+        assert self.indx + n <= len(self.code)
+
+        param1 = self.get_nth_param(1)
+
+        if n == 2 or n == 3:
+            param2 = self.get_nth_param(2)
+        else:
+            param2 = None
+        if n == 3:
+            param3 = self.get_nth_param(3)
+        else:
+            param3 = None
+
+        return param1, param2, param3
+
     def run_code(self):
         while not self.halt:
             self.run_instr()
         return self.outs
 
     def ex_one(self):
-        param1mode = (self.code[self.indx] // 100) % 10
-        param2mode = (self.code[self.indx] // 1000) % 10
-        param3mode = (self.code[self.indx] // 10000) % 10
-
-        param1 = [self.code[self.indx + 1], self.indx + 1][param1mode]
-        param2 = [self.code[self.indx + 2], self.indx + 2][param2mode]
-        param3 = [self.code[self.indx + 3], self.indx + 3][param3mode]
+        param1, param2, param3 = self.get_n_params(3)
 
         self.code[param3] = self.code[param1] + self.code[param2]
 
         self.indx += 4
 
     def ex_two(self):
-        param1mode = (self.code[self.indx] // 100) % 10
-        param2mode = (self.code[self.indx] // 1000) % 10
-        param3mode = (self.code[self.indx] // 10000) % 10
-
-        param1 = [self.code[self.indx + 1], self.indx + 1][param1mode]
-        param2 = [self.code[self.indx + 2], self.indx + 2][param2mode]
-        param3 = [self.code[self.indx + 3], self.indx + 3][param3mode]
+        param1, param2, param3 = self.get_n_params(3)
 
         self.code[param3] = self.code[param1] * self.code[param2]
 
         self.indx += 4
 
     def ex_three(self):
-        param1mode = (self.code[self.indx] // 100) % 10
-
-        param1 = [self.code[self.indx + 1], self.indx + 1][param1mode]
+        param1, _, _ = self.get_n_params(1)
 
         self.code[param1] = self.inp
 
         self.indx += 2
 
     def ex_four(self):
-        param1mode = (self.code[self.indx] // 100) % 10
-        param1 = [self.code[self.indx + 1], self.indx + 1][param1mode]
+        param1, _, _ = self.get_n_params(1)
+
         self.outs.append(self.code[param1])
 
         self.indx += 2
 
     def ex_five(self):
-        param1mode = (self.code[self.indx] // 100) % 10
-        param2mode = (self.code[self.indx] // 1000) % 10
-
-        param1 = [self.code[self.indx + 1], self.indx + 1][param1mode]
-        param2 = [self.code[self.indx + 2], self.indx + 2][param2mode]
+        param1, param2, _ = self.get_n_params(2)
 
         if self.code[param1] != 0:
             self.indx = self.code[param2]
@@ -127,11 +131,7 @@ class IntCode:
             self.indx += 3
 
     def ex_six(self):
-        param1mode = (self.code[self.indx] // 100) % 10
-        param2mode = (self.code[self.indx] // 1000) % 10
-
-        param1 = [self.code[self.indx + 1], self.indx + 1][param1mode]
-        param2 = [self.code[self.indx + 2], self.indx + 2][param2mode]
+        param1, param2, _ = self.get_n_params(2)
 
         if self.code[param1] == 0:
             self.indx = self.code[param2]
@@ -139,13 +139,7 @@ class IntCode:
             self.indx += 3
 
     def ex_seven(self):
-        param1mode = (self.code[self.indx] // 100) % 10
-        param2mode = (self.code[self.indx] // 1000) % 10
-        param3mode = (self.code[self.indx] // 10000) % 10
-
-        param1 = [self.code[self.indx + 1], self.indx + 1][param1mode]
-        param2 = [self.code[self.indx + 2], self.indx + 2][param2mode]
-        param3 = [self.code[self.indx + 3], self.indx + 3][param3mode]
+        param1, param2, param3 = self.get_n_params(3)
 
         if self.code[param1] < self.code[param2]:
             self.code[param3] = 1
@@ -155,13 +149,7 @@ class IntCode:
         self.indx += 4
 
     def ex_eight(self):
-        param1mode = (self.code[self.indx] // 100) % 10
-        param2mode = (self.code[self.indx] // 1000) % 10
-        param3mode = (self.code[self.indx] // 10000) % 10
-
-        param1 = [self.code[self.indx + 1], self.indx + 1][param1mode]
-        param2 = [self.code[self.indx + 2], self.indx + 2][param2mode]
-        param3 = [self.code[self.indx + 3], self.indx + 3][param3mode]
+        param1, param2, param3 = self.get_n_params(3)
 
         if self.code[param1] == self.code[param2]:
             self.code[param3] = 1
