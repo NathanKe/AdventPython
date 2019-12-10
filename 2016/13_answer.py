@@ -1,10 +1,11 @@
 import collections
+import itertools
 
 puzzle = 1350
 
 walls = []
 halls = []
-solved = []
+solved = {}
 
 
 def is_wall(p_x, p_y, favorite):
@@ -18,6 +19,7 @@ def is_wall(p_x, p_y, favorite):
         one_count = sum(map(int, bin_num[2:]))
         if one_count % 2 != 0:
             walls.append((p_x, p_y))
+            # solved[(p_x, p_y)] = 8888
             return True
         else:
             halls.append((p_x, p_y))
@@ -25,7 +27,7 @@ def is_wall(p_x, p_y, favorite):
 
 
 def valid_hall(node, favorite):
-    return node[0] >= 0 and node[1] >= 0 and node and not is_wall(*node, favorite)
+    return node[0] >= 0 and node[1] >= 0 and not is_wall(*node, favorite)
 
 
 def adj_halls(p_x, p_y, favorite):
@@ -48,35 +50,34 @@ def adj_halls(p_x, p_y, favorite):
     return ret_adj
 
 
-def min_distance(favorite, s_x, s_y, g_x, g_y):
+def fill_grid_from_one_one(favorite, goal):
+    print('-----------------------')
     frontier = collections.deque([((1, 1), [])])
-    solved = []
     while len(frontier) > 0:
+        print(frontier)
         cur_loc, cur_path = frontier.pop()
-        solved.append(cur_loc)
-        if cur_loc[0] == g_x and cur_loc[1] == g_y:
-            print(cur_path)
+        solved[cur_loc] = len(cur_path)
+        if cur_loc == goal:
             break
-        if len(cur_path) >= 92:
+        if len(cur_path) > 10000:
+            solved[cur_loc] = 9999
             break
         new_adj = adj_halls(*cur_loc, favorite)
         for adj in new_adj:
             if adj not in solved:
                 frontier.appendleft((adj, cur_path[:] + [cur_loc]))
-    return len(cur_path)
 
 
-print(min_distance(puzzle, 1, 1, 31, 39))
+# fill_grid_from_one_one(puzzle, (31, 39))
+# print(solved[(31, 39)])
 
 # p2 - memoize solved dict outside of min_dist calc
 # stop recalculating every node for every search
-lt_50 = []
-for m_x in range(52):
-    for m_y in range(52):
-        if not is_wall(m_x, m_y, puzzle):
-            min_d = min_distance(puzzle, 1, 1, m_x, m_y)
-            print(m_x, m_y, min_d)
-            if min_d <= 50:
-                lt_50.append((m_x, m_y, min_d))
-
-print(len(lt_50))
+solved = {}
+walls = []
+halls = []
+grid_points = list(itertools.product(range(60), range(60)))
+grid_points.sort(key=sum)
+for point in grid_points:
+    if not is_wall(*point, puzzle) and point not in solved.keys():
+        fill_grid_from_one_one(puzzle, point)
