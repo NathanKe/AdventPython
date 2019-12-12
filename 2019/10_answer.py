@@ -1,6 +1,7 @@
 import collections
 import math
-import teninput
+
+puzzle = open('10_input').read()
 
 
 def generate_dict(ast_string):
@@ -44,7 +45,7 @@ def max_vis_asteroid(p_grid):
     return c_max
 
 
-best_station = max_vis_asteroid(generate_dict(teninput.puzzle))
+best_station = max_vis_asteroid(generate_dict(puzzle))
 print('Part 1: ', len(best_station))
 
 
