@@ -1,61 +1,59 @@
 import math
 import collections
-import re
 
-rx_text = open('14_input').read().splitlines()
-
-
-def rx_qty_type(s):
-    q, t = s.split(' ')
-    return int(q), t
+rxs = open('14_input').read().splitlines()
 
 
-def rx_digest(p_qty, p_chem, p_text):
-    for rx in p_text:
+def rx_elems(p_chem):
+    for rx in rxs:
         lhs, rhs = rx.split(' => ')
-        c_qty, c_chem = rhs.split(' ')
-        c_qty = int(c_qty)
-        if c_chem == p_chem:
-            return math.ceil(p_qty / c_qty) * list(map(rx_qty_type, lhs.split(', ')))
+        out_qty, out_chem = rhs.split(' ')
+        out_qty = int(out_qty)
+        if out_chem == p_chem:
+            sub_elems_str = lhs.split(', ')
+            sub_elems_tu = list(map(lambda s: (int(s.split(' ')[0]), s.split(' ')[1]), sub_elems_str))
+            return out_qty, sub_elems_tu
 
 
-def collapse(p_chem_list):
-    ch_dict = collections.defaultdict(int)
-    for ch in p_chem_list:
-        ch_dict[ch[1]] += ch[0]
-    out_list = []
-    for i in ch_dict.items():
-        out_list.append((i[1], i[0]))
-    return collections.deque(out_list)
+def ore_cost(p_qty, p_chem, surp_dict):
+    if surp_dict is None:
+        surp_dict = collections.defaultdict(int)
+    if p_chem == 'ORE':
+        return p_qty
+    if surp_dict[p_chem] >= p_qty:
+        surp_dict[p_chem] -= p_qty
+        return 0
+    p_qty -= surp_dict[p_chem]
+    surp_dict[p_chem] = 0
+    ore = 0
+    rx_out_qty, rx_components = rx_elems(p_chem)
+    iter_count = math.ceil(p_qty / rx_out_qty)
+    surplus = iter_count * rx_out_qty - p_qty
+    surp_dict[p_chem] += surplus
+    for rx_comp in rx_components:
+        ore += ore_cost(iter_count * rx_comp[0], rx_comp[1], surp_dict)
+    return ore
 
 
-def base_info(p_text):
-    ch_list = []
-    for rx in p_text:
-        if re.search('ORE', rx):
-            lhs, rhs = rx.split(' => ')
-            out_qty, chem = rhs.split(' ')
-            ore_qty = lhs.split(' ')[0]
-            ch_list.append((int(ore_qty), int(out_qty), chem))
-    return ch_list
+def ore_fuel_cost(fuel_qty):
+    return ore_cost(fuel_qty, 'FUEL', None)
 
 
-def base_names(p_text):
-    b_i = base_info(p_text)
-    return list(map(lambda tu: tu[2], b_i))
+print('Part 1: ', ore_fuel_cost(1))
 
+one_trillion = 1000000000000
 
-def rx_expand(p_qty, p_chem, p_text):
-    bases = base_names(p_text)
-    print(bases)
-    dq = collections.deque(rx_digest(p_qty, p_chem, p_text))
-    while len(dq) > 0:
-        dq = collapse(dq)
-        print(dq)
-        if dq[-1][1] not in bases:
-            new_expandee = dq.pop()
-            new_digest = rx_digest(*new_expandee, p_text)
-            for tu in new_digest:
-                dq.append(tu)
-        else:
-            dq.rotate(1)
+too_few_fuel_units = 1
+too_many_fuel_units = ore_fuel_cost(one_trillion)
+
+while True:
+    mid_guess = (too_few_fuel_units + too_many_fuel_units) // 2
+    guess_cost = ore_fuel_cost(mid_guess)
+    guess_cost_plus_one = ore_fuel_cost(mid_guess + 1)
+    if guess_cost > one_trillion:
+        too_many_fuel_units = mid_guess
+    elif ore_fuel_cost(mid_guess + 1) > one_trillion:
+        print('Part 2: ', mid_guess)
+        break
+    else:
+        too_few_fuel_units = mid_guess + 1
