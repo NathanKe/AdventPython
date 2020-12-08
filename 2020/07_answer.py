@@ -40,14 +40,13 @@ print('Part 1: ', len(set(contains_shiny_gold)))
 
 def child_count(parent, cur_sum):
     direct_children = rules_dict[parent].items()
-    print(parent, direct_children)
     for child in direct_children:
         cur_sum += child[1]
         cur_sum += child[1] * child_count(child[0], 0)
     return cur_sum
 
 
-print('Part 2: ', child_count('shiny gold bags', 1))
+print('Part 2: ', child_count('shiny gold bags', 0))
 
 
 
