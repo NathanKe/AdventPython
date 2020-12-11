@@ -1,5 +1,6 @@
 import collections
 
+
 def init_grid(filename):
     out_grid = collections.defaultdict(lambda: collections.defaultdict(lambda: '.'))
     raw_data = open(filename).read().splitlines()
