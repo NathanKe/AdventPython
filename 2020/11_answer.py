@@ -10,17 +10,6 @@ def init_grid(filename):
     return out_grid
 
 
-def pretty_print(grid_dict):
-    out_str = ""
-    for row_num in range(len(grid_dict)):
-        row_str = ""
-        for col_num in range(len(grid_dict[row_num])):
-            row_str += grid_dict[row_num][col_num]
-        row_str += "\n"
-        out_str += row_str
-    return out_str
-
-
 def neighbor_count(row_num, col_num, grid, char):
     n_c = 0
     for i in range(row_num - 1, row_num + 2):
@@ -32,26 +21,25 @@ def neighbor_count(row_num, col_num, grid, char):
 
 def step_grid_p1(in_grid):
     out_grid = collections.defaultdict(lambda: collections.defaultdict(str))
+    change = False
     for row_num in range(len(in_grid)):
         for col_num in range(len(in_grid[0])):
             if in_grid[row_num][col_num] == 'L' and neighbor_count(row_num, col_num, in_grid, '#') == 0:
                 out_grid[row_num][col_num] = '#'
+                change = True
             elif in_grid[row_num][col_num] == '#' and neighbor_count(row_num, col_num, in_grid, '#') >= 5:  # 4 or more, plus 1 for the seat itself
                 out_grid[row_num][col_num] = 'L'
+                change = True
             else:
                 out_grid[row_num][col_num] = in_grid[row_num][col_num]
-    return out_grid
+    return out_grid, change
 
 
 def occupied_count_at_stable_p1():
-    dupe = False
+    change = True
     grid = init_grid('11_input')
-    steps = 0
-    while not dupe:
-        new_grid = step_grid_p1(grid)
-        steps += 1
-        if pretty_print(grid) == pretty_print(new_grid):
-            dupe = True
+    while change:
+        new_grid, change = step_grid_p1(grid)
         grid = new_grid
     return collections.Counter(pretty_print(grid))['#']
 
@@ -62,10 +50,10 @@ print('Part 1: ', occupied_count_at_stable_p1())
 def ray(pos_r, pos_c, off_r, off_c, in_grid):
     cur_r = pos_r + off_r
     cur_c = pos_c + off_c
-    ray_list = []
+    ray_list = collections.deque([])
     while 0 <= cur_r < len(in_grid) and 0 <= cur_c < len(in_grid[cur_r]):
         cur_s = in_grid[cur_r][cur_c]
-        ray_list.append(cur_s)
+        ray_list.appendleft(cur_s)
         cur_r += off_r
         cur_c += off_c
     return ray_list
@@ -98,29 +86,27 @@ def ray_occupied_count(pos_r, pos_c, in_grid):
 
 
 def step_grid_p2(in_grid):
+    change = False
     out_grid = collections.defaultdict(lambda: collections.defaultdict(str))
     for row_num in range(len(in_grid)):
         for col_num in range(len(in_grid[0])):
             if in_grid[row_num][col_num] == 'L' and ray_occupied_count(row_num, col_num, in_grid) == 0:
                 out_grid[row_num][col_num] = '#'
-            elif in_grid[row_num][col_num] == '#' and ray_occupied_count(row_num, col_num, in_grid) >= 6:  # 5 or more
+                change = True
+            elif in_grid[row_num][col_num] == '#' and ray_occupied_count(row_num, col_num, in_grid) >= 5:  # 5 or more
                 out_grid[row_num][col_num] = 'L'
+                change = True
             else:
                 out_grid[row_num][col_num] = in_grid[row_num][col_num]
-    return out_grid
+    return out_grid, change
 
 
 def occupied_count_at_stable_p2():
-    dupe = False
+    change = True
     grid = init_grid('11_input')
-    steps = 0
-    while not dupe:
-        new_grid = step_grid_p2(grid)
-        steps += 1
-        if pretty_print(grid) == pretty_print(new_grid):
-            dupe = True
+    while change:
+        new_grid, change = step_grid_p2(grid)
         grid = new_grid
-        print(pretty_print(grid))
     return collections.Counter(pretty_print(grid))['#']
 
 
