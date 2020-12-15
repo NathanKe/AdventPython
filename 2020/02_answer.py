@@ -1,5 +1,6 @@
 import re
 import collections as c
+
 pswds = open('02_input').read().splitlines()
 
 
@@ -22,7 +23,7 @@ def good_pswd_2(in_line):
     letter = m.group(3)
     pswd = m.group(4)
 
-    return (pswd[left_val-1] == letter) ^ (pswd[right_val-1] == letter)
+    return (pswd[left_val - 1] == letter) ^ (pswd[right_val - 1] == letter)
 
 
 print("Part 1: ", len(list(filter(lambda p: good_pswd_1(p), pswds))))

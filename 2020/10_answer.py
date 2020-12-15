@@ -4,11 +4,12 @@ import numpy
 adapters = sorted(list(map(int, open('10_input').read().split())))
 
 adapters.insert(0, 0)
-adapters.append(adapters[-1]+3)
+adapters.append(adapters[-1] + 3)
 
 
 def diff_list(in_list):
-    return [in_list[i+1]-in_list[i] for i in range(len(in_list)-1)]
+    return [in_list[i + 1] - in_list[i] for i in range(len(in_list) - 1)]
+
 
 adapt_diffs = diff_list(adapters)
 diff_counter = Counter(adapt_diffs)
@@ -33,7 +34,6 @@ path_count_dict = {1: 1,
                    3: 2,
                    4: 4,
                    5: 7}
-
 
 p2 = numpy.prod(list(map(lambda x: path_count_dict[x], segments.values())), dtype='int64')
 print('Part 2: ', p2)

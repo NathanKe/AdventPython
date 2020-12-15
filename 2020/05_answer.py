@@ -1,12 +1,13 @@
 from collections import Counter as co
+
 seats = open('05_input').read().splitlines()
 
 
 def recur_seat(avail, inst):
     if inst[0] == 'F' or inst[0] == 'L':
-        avail = avail[:len(avail)//2]
+        avail = avail[:len(avail) // 2]
     else:
-        avail = avail[len(avail)//2:]
+        avail = avail[len(avail) // 2:]
 
     if len(inst) == 1:
         return avail[0]
@@ -20,7 +21,6 @@ def seat_id(inst):
 
 print("Part 1: ", sorted(map(lambda x: seat_id(x), seats))[-1])
 
-
 seat_dict = list(map(lambda s: {'r': recur_seat(range(128), s[:-3]),
                                 'c': recur_seat(range(8), s[-3:]),
                                 'i': seat_id(s)},
@@ -33,7 +33,6 @@ for seat in seat_dict:
         info[seat['r']][1].append(seat['c'])
     else:
         info[seat['r']] = [1, [seat['c']]]
-
 
 my_info = list(filter(lambda elem: elem[1][0] == 7, info.items()))[0]
 

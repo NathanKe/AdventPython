@@ -29,8 +29,5 @@ for row in rows:
     cursor5 = (cursor5 + 5) % len(row)
     cursor7 = (cursor7 + 7) % len(row)
 
-
 print("Part 1: ", tree_count3)
 print("Part 2: ", tree_count1 * tree_count3 * tree_count5 * tree_count7 * tree_countHalf)
-
-

@@ -51,8 +51,8 @@ def expand_mask(in_mask):
         cur_mask = mask_set.popleft()
         x_ind = cur_mask.find('X')
         if x_ind != -1:
-            mask_zero = cur_mask[:x_ind] + '0' + cur_mask[(x_ind+1):]
-            mask_one = cur_mask[:x_ind] + '1' + cur_mask[(x_ind+1):]
+            mask_zero = cur_mask[:x_ind] + '0' + cur_mask[(x_ind + 1):]
+            mask_one = cur_mask[:x_ind] + '1' + cur_mask[(x_ind + 1):]
             mask_set.append(mask_zero)
             mask_set.append(mask_one)
         else:

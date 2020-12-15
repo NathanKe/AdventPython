@@ -6,7 +6,7 @@ data = list(map(int, open('09_input').readlines()))
 def valid(index):
     return data[index] in set(map(sum,
                                   filter(lambda tu: tu[0] != tu[1],
-                                         itertools.product(data[index-25:index], data[index-25: index]))))
+                                         itertools.product(data[index - 25:index], data[index - 25: index]))))
 
 
 first_invalid = 0

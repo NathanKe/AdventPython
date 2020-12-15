@@ -4,8 +4,7 @@ start_nums = [8, 13, 1, 0, 18, 9]
 
 number_history = collections.defaultdict(lambda: [])
 for i in range(len(start_nums)):
-    number_history[start_nums[i]].append(i+1)
-
+    number_history[start_nums[i]].append(i + 1)
 
 turn_count = len(start_nums) + 1
 previous_number = start_nums[-1]

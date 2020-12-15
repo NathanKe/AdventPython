@@ -67,5 +67,3 @@ def possible_programs():
 print('Part 1: ', run_program(reset_program())[0])
 
 print('Part 2: ', list(filter(lambda res: not res[1], (map(lambda pr: run_program(pr), possible_programs()))))[0][0])
-
-

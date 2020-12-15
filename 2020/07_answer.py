@@ -4,7 +4,6 @@ rules_text = raw_data = open('07_input').read().splitlines()
 
 rules_text = [re.sub(r"bag(,|\.)", r"bags\1", rule) for rule in rules_text]
 
-
 rules_dict = {}
 for rule in rules_text:
     container, containees = rule.split(' contain ')
@@ -47,10 +46,3 @@ def child_count(parent, cur_sum):
 
 
 print('Part 2: ', child_count('shiny gold bags', 0))
-
-
-
-
-
-
-
