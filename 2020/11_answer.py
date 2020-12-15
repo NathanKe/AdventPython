@@ -10,6 +10,17 @@ def init_grid(filename):
     return out_grid
 
 
+def stringify(in_grid):
+    out = ""
+    for row_num in range(len(in_grid)):
+        r = ""
+        for col_num in range(len(in_grid[row_num])):
+            r += in_grid[row_num][col_num]
+        r += "\n"
+        out += r
+    return out
+
+
 def neighbor_count(row_num, col_num, grid, char):
     n_c = 0
     for i in range(row_num - 1, row_num + 2):
@@ -27,7 +38,7 @@ def step_grid_p1(in_grid):
             if in_grid[row_num][col_num] == 'L' and neighbor_count(row_num, col_num, in_grid, '#') == 0:
                 out_grid[row_num][col_num] = '#'
                 change = True
-            elif in_grid[row_num][col_num] == '#' and neighbor_count(row_num, col_num, in_grid, '#') >= 5:  # 4 or more, plus 1 for the seat itself
+            elif in_grid[row_num][col_num] == '#' and neighbor_count(row_num, col_num, in_grid, '#') >= 5:
                 out_grid[row_num][col_num] = 'L'
                 change = True
             else:
@@ -41,7 +52,7 @@ def occupied_count_at_stable_p1():
     while change:
         new_grid, change = step_grid_p1(grid)
         grid = new_grid
-    return collections.Counter(pretty_print(grid))['#']
+    return collections.Counter(stringify(grid))['#']
 
 
 print('Part 1: ', occupied_count_at_stable_p1())
@@ -107,8 +118,7 @@ def occupied_count_at_stable_p2():
     while change:
         new_grid, change = step_grid_p2(grid)
         grid = new_grid
-    return collections.Counter(pretty_print(grid))['#']
+    return collections.Counter(stringify(grid))['#']
 
 
 print('Part 2: ', occupied_count_at_stable_p2())
-
