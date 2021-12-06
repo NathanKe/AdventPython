@@ -1,13 +1,13 @@
-data = list(map(int, (open('06_input').read().splitlines()[0]).split(',')))
+school = list(map(int, (open('06_input').read().splitlines()[0]).split(',')))
 six_hash = {}
 eight_hash = {}
 
 
-def descent_count(tts, days_remaining):
-    if days_remaining <= tts:
+def descent_count(time_to_spawn, days_remaining):
+    if days_remaining <= time_to_spawn:
         return 1
     else:
-        x = days_remaining - tts - 1
+        x = days_remaining - time_to_spawn - 1
         if x in six_hash.keys():
             a = six_hash[x]
         else:
@@ -21,5 +21,5 @@ def descent_count(tts, days_remaining):
         return a+b
 
 
-print("Part 1: ", sum(map(lambda x: descent_count(x, 80), data)))
-print("Part 2: ", sum(map(lambda x: descent_count(x, 256), data)))
+print("Part 1: ", sum(map(lambda fish: descent_count(fish, 80), school)))
+print("Part 2: ", sum(map(lambda fish: descent_count(fish, 256), school)))
