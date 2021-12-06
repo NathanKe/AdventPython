@@ -45,6 +45,7 @@ class BingoBoard:
 class BoardSet:
     def __init__(self, in_data_stream):
         self.boards = []
+        self.winning_scores = []
         cur_line_set = []
         for line in in_data_stream:
             if line != '':
@@ -58,23 +59,21 @@ class BoardSet:
         for board in self.boards:
             board.play_draw(in_num)
 
-    def return_winning_score_or_zero(self):
+    def process_winners(self):
         for index, board in enumerate(self.boards):
             cur_board_score = board.score_or_zero()
             if cur_board_score:
                 del self.boards[index]
-                return cur_board_score
-        return 0
+                self.winning_scores.append(cur_board_score)
 
 
 my_boards = BoardSet(data[2:])
 
 numbers_to_call = list(map(int, data[0].split(",")))
 
-winning_scores = []
 for num in numbers_to_call:
     my_boards.play_draw_across_all_boards(num)
-    cur_win_score = my_boards.return_winning_score_or_zero()
-    if cur_win_score:
-        print(len(my_boards.boards))
-        winning_scores.append(cur_win_score)
+    my_boards.process_winners()
+
+print("Part 1: ", my_boards.winning_scores[0])
+print("Part 2: ", my_boards.winning_scores[-1])
