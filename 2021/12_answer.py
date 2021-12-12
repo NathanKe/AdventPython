@@ -28,7 +28,7 @@ for edge in edges:
 
 
 def path_count_by_allowed_double_small_cave(double_cave):
-    completed_paths = []
+    completed_paths = set()
     paths_under_construction = [['start']]
     while paths_under_construction:
         cur_path = paths_under_construction.pop()
@@ -38,7 +38,8 @@ def path_count_by_allowed_double_small_cave(double_cave):
             if frontier_elem == 'end':
                 new_path = [i for i in cur_path]
                 new_path.append(frontier_elem)
-                completed_paths.append(new_path)
+                new_path_string = ''.join(new_path)
+                completed_paths.add(new_path_string)
             elif frontier_elem == double_cave:
                 double_cave_count = Counter(cur_path)[double_cave]
                 if double_cave_count < 2:
@@ -55,8 +56,6 @@ def path_count_by_allowed_double_small_cave(double_cave):
 print("Part 1: ", len(path_count_by_allowed_double_small_cave(None)))
 
 small_non_start_end = small_caves.difference({'start', 'end'})
-small_non_start_end.add(None)
-including_dupes = chain(*map(path_count_by_allowed_double_small_cave, small_non_start_end))
-stringified = map(lambda p: ''.join(p), including_dupes)
-uniqueified = set(stringified)
+flatified = chain(*map(path_count_by_allowed_double_small_cave, small_non_start_end))
+uniqueified = set(flatified)
 print("Part 2: ", len(uniqueified))
