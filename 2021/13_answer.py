@@ -29,8 +29,7 @@ class Paper:
                 if n_x >= val:
                     n_x = 2 * val - n_x
                 n_dots.add((n_x, n_y))
-        while n_dots:
-            self.dots.add(n_dots.pop())
+        self.dots = n_dots
 
     def fold_all(self):
         first_fold = 0
