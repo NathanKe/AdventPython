@@ -48,9 +48,9 @@ class Paper:
         for y in range(max_y + 1):
             row = ""
             for x in range(max_x + 1):
-                ch = "."
+                ch = " "
                 if (x, y) in self.dots:
-                    ch = "#"
+                    ch = "█"
                 row += ch
             row += "\n"
             out += row
