@@ -35,7 +35,8 @@ def expand(polymer):
 
 
 def count_recur(polymer, exp_count):
-    if exp_count > 1:
+    print(polymer)
+    if exp_count > 0:
         if len(polymer) >= 2:
             polymer = expand(polymer)
     p_len = len(polymer)
