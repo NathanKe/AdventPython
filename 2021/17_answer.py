@@ -20,6 +20,7 @@ class Probe:
         self.y_pos = 0
         self.path = {(self.x_pos, self.y_pos)}
         self.max_y = 0
+        self.success = False
 
     def step(self):
         self.x_pos += self.x_vel
@@ -29,7 +30,8 @@ class Probe:
         elif self.x_vel < 0:
             self.x_vel += 1
         self.y_vel -= 1
-        self.path.add((self.x_pos, self.y_pos))
+        if x_low <= self.x_pos <= x_high and y_low <= self.y_pos <= y_high:
+            self.success = True
         if self.y_pos > self.max_y:
             self.max_y = self.y_pos
 
@@ -41,10 +43,10 @@ class Probe:
 success_max_y = 0
 success_count = 0
 for x in range(0, x_high + 1):
-    for y in range(y_low, 500):
+    for y in range(y_low, 250):
         c_p = Probe(x, y)
         c_p.fire()
-        if c_p.path.intersection(targ_area):
+        if c_p.success:
             if c_p.max_y > success_max_y:
                 success_max_y = c_p.max_y
             success_count += 1
