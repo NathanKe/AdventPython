@@ -64,6 +64,7 @@ def parse(bin_packet, version_sum, packet_result):
             literal_val += int(bin_packet[prefix_index + 1: prefix_index + 5])
             bin_packet = bin_packet[prefix_index + 5:]
             packet_result = literal_val
+            bin_packet, version_sum, packet_result = parse(bin_packet, version_sum, packet_result)
         else:
             l_i = bin_packet[6]
             # length defined
@@ -80,6 +81,7 @@ def parse(bin_packet, version_sum, packet_result):
                 sub_res = [function_apply(t, e) for e in sub_packet_results]
                 packet_result = function_apply(t, [packet_result, sub_res])
                 bin_packet = bin_packet[22 + sub_packet_length_int:]
+                bin_packet, version_sum, packet_result = parse(bin_packet, version_sum, packet_result)
             # count defined
             elif l_i == '1':
                 sub_packet_count_bit = bin_packet[7:18]
@@ -91,7 +93,7 @@ def parse(bin_packet, version_sum, packet_result):
                     sub_packet_results.append(x_res)
                 sub_res = [function_apply(t, e) for e in sub_packet_results]
                 packet_result = function_apply(t, [packet_result, sub_res])
-        bin_packet, version_sum, packet_result = parse(bin_packet, version_sum, packet_result)
+                bin_packet, version_sum, packet_result = parse(bin_packet, version_sum, packet_result)
         return bin_packet, version_sum, packet_result
 
 
