@@ -1,6 +1,4 @@
 from collections import deque
-from numpy import prod
-
 hex_string = open('16_input').read().splitlines()[0]
 
 
