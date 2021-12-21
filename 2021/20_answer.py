@@ -5,6 +5,9 @@ class Image:
     def __init__(self, input_file):
         alg_string, _, *input_rows = open(input_file).read().splitlines()
 
+        self.min_dim = 0
+        self.max_dim = 100
+
         self.alg_list = []
         for ch in alg_string:
             if ch == '#':
@@ -39,26 +42,29 @@ class Image:
     def enhance(self):
         if self.enhance_count % 2 == 0:
             new_image = defaultdict(lambda: defaultdict(lambda: 1))
-            for r in range(-50, 150):
-                for c in range(-50, 150):
+            for r in range(self.min_dim - 1, self.max_dim + 1):
+                for c in range(self.min_dim - 1, self.max_dim + 1):
                     new_val = self.alg_list[self.surround_index(r, c)]
 
                     new_image[r][c] = new_val
             self.image = new_image
         else:
             new_image = defaultdict(lambda: defaultdict(lambda: 0))
-            for r in range(-50, 150):
-                for c in range(-50, 150):
+            for r in range(self.min_dim - 1, self.max_dim + 1):
+                for c in range(self.min_dim - 1, self.max_dim + 1):
                     new_val = self.alg_list[self.surround_index(r, c)]
 
                     new_image[r][c] = new_val
             self.image = new_image
+
         self.enhance_count += 1
+        self.min_dim -= 1
+        self.max_dim += 1
 
     def light_count(self):
         out_count = 0
-        for r in range(-50, 150):
-            for c in range(-50, 150):
+        for r in range(self.min_dim - 1, self.max_dim + 1):
+            for c in range(self.min_dim - 1, self.max_dim + 1):
                 if self.image[r][c] == 1:
                     out_count += 1
         return out_count
