@@ -21,7 +21,7 @@ def reduce_by_guess_result(guess, encoding, word_list):
     return word_list
 
 
-possible_results = [np.base_repr(y, base=3).zfill(5) for y in range(243)]
+possible_results = open('possible_results.txt').read().splitlines()
 
 
 def most_reductive_word(word_list):
@@ -108,5 +108,21 @@ def play():
         if rem_len < 6 - i:
             break
 
+
+def free_play():
+    game_list = data_word_list
+    print("Guess:")
+    guess = input()
+    while True:
+        print("Result:")
+        result = input()
+        game_list = reduce_by_guess_result(guess, result, game_list)
+        guess = most_reductive_word(game_list)
+        rem_len = len(game_list)
+        info = f"Remaining words: {rem_len}, please guess: {guess}"
+        if rem_len < 5:
+            print(f"Remaining words: {game_list}")
+            break
+        print(info)
 
 #play()
