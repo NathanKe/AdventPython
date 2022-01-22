@@ -7,12 +7,16 @@ answer_list = open('answer_list.txt').read().splitlines()
 possible_results = open('possible_results.txt').read().splitlines()
 
 
-def grand_filter(ind, let, code, dupe_letters, word):
-    code2 = code == 2 and word[ind] == let
-    code1 = code == 1 and word[ind] != let and let in word
-    code0 = code == 0 and let not in word
-    code0_dupe = code == 0 and let in dupe_letters and word[ind] != let
-    return code2 or code1 or code0 or code0_dupe
+def index_letter_code_filter(ind, let, code, dupe_letters, word):
+    code2 = code == '2' and word[ind] == let
+    code1 = code == '1' and word[ind] != let and let in word
+    code0 = code == '0' and let not in word
+    code0_dupe = code == '0' and let in dupe_letters and word[ind] != let
+    return any([code2, code1, code0, code0_dupe])
+
+
+def grand_filter(guess, encoding, dupe_letters, word):
+    return all([index_letter_code_filter(i, l, c, dupe_letters, word) for i, (l, c) in enumerate(zip(guess, encoding))])
 
 
 # 0 wrong, 1 right letter wrong place, 2 right letter in right place
@@ -23,30 +27,20 @@ def reduce_by_guess_result(guess, encoding, word_list):
         if guess[i] in sub_str:
             dupe_letters.append(guess[i])
 
-    for i, (l, c) in enumerate(zip(guess, encoding)):
-        if c == '2':
-            word_list = list(filter(lambda word: word[i] == l, word_list))
-        elif c == '1':
-            word_list = list(filter(lambda word: word[i] != l and l in word, word_list))
-        elif c == '0':
-            if l in dupe_letters:
-                word_list = list(filter(lambda word: word[i] != l, word_list))
-            elif l not in dupe_letters:
-                word_list = list(filter(lambda word: l not in word, word_list))
-
+    word_list = list(filter(lambda word: grand_filter(guess, encoding, dupe_letters, word), word_list))
     return word_list
 
 
-def most_reductive_word(guessable_words, word_list):
-    smallest_largest_remaining_group = float('inf')
+def most_reductive_word(guessable_words, word_list, limit=15000):
+    smallest_largest_remaining_group = len(word_list)
     best_word = 'xxxxx'
 
-    for i, word in enumerate(guessable_words):
+    for word in guessable_words:
         largest_remaining_group = 0
 
         for res in possible_results:
             remainder_size = len(reduce_by_guess_result(word, res, word_list))
-            if remainder_size > smallest_largest_remaining_group:
+            if remainder_size > smallest_largest_remaining_group or remainder_size >= limit:
                 largest_remaining_group = remainder_size
                 break
             if remainder_size > largest_remaining_group:
@@ -91,6 +85,19 @@ def checker(guess, answer):
     return result
 
 
+def retrieve_guess(game_list):
+    guess_from_poss, poss_redux = most_reductive_word(game_list, game_list)
+    if poss_redux == 1:
+        guess = guess_from_poss
+    else:
+        guess_from_all, all_redux = most_reductive_word(data_word_list, game_list, poss_redux)
+        if poss_redux <= all_redux:
+            guess = guess_from_poss
+        else:
+            guess = guess_from_all
+    return guess
+
+
 arise_hash = {}
 
 
@@ -102,13 +109,7 @@ def auto_play(answer, verbose=False):
     while True:
         result = checker(guess, answer)
         verbose_print(verbose, f"{guess} : {result}")
-        if steps == 1 and result in arise_hash:
-            game_list = arise_hash[result]
-        elif steps == 1 and result not in arise_hash:
-            game_list = reduce_by_guess_result(guess, result, game_list)
-            arise_hash[result] = game_list
-        else:
-            game_list = reduce_by_guess_result(guess, result, game_list)
+        game_list = reduce_by_guess_result(guess, result, game_list)
 
         if result == "22222":
             break
@@ -116,21 +117,16 @@ def auto_play(answer, verbose=False):
         if len(game_list) == 1:
             guess = game_list[0]
         else:
-            guess_from_poss, poss_redux = most_reductive_word(game_list, game_list)
-            if poss_redux == 1:
-                guess = guess_from_poss
+            if steps == 1 and result in arise_hash:
+                guess = arise_hash[result]
+            elif steps == 1 and result not in arise_hash:
+                guess = retrieve_guess(game_list)
+                arise_hash[result] = guess
             else:
-                guess_from_all, all_redux = most_reductive_word(data_word_list, game_list)
+                guess = retrieve_guess(game_list)
 
-                if poss_redux <= all_redux:
-                    guess = guess_from_poss
-                else:
-                    guess = guess_from_all
         steps += 1
         if steps > 6:
             verbose_print(verbose, "Failure!")
             break
     return steps
-
-
-# To-Do:
