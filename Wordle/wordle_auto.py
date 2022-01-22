@@ -1,6 +1,6 @@
 # https://www.devangthakkar.com/wordle_archive/
 
-from collections import Counter
+from itertools import product
 
 data_word_list = open('word_list.txt').read().splitlines()
 answer_list = open('answer_list.txt').read().splitlines()
@@ -128,16 +128,31 @@ def auto_play(answer, verbose=False):
                 guess = retrieve_guess(game_list)
                 big_fucking_hash[game_chain] = guess
         game_chain += guess
-        # if steps == 1 and result in arise_hash:
-        #     guess = arise_hash[result]
-        # elif steps == 1 and result not in arise_hash:
-        #     guess = retrieve_guess(game_list)
-        #     arise_hash[result] = guess
-        # else:
-        #     guess = retrieve_guess(game_list)
-
         steps += 1
         if steps > 6:
             verbose_print(verbose, "Failure!")
             break
     return steps
+
+
+def two_search():
+    smallest_largest = len(answer_list)
+    best_pair = ('xxxxx', 'yyyyy')
+    for word1, word2 in product(data_word_list, data_word_list):
+        game_list = answer_list
+        if word1 != word2:
+            largest = 0
+            for res1, res2 in product(possible_results, possible_results):
+                game_list = reduce_by_guess_result(word1, res1, game_list)
+                game_list = reduce_by_guess_result(word2, res2, game_list)
+                rem_size = len(game_list)
+                if rem_size > smallest_largest:
+                    largest = rem_size
+                    break
+                elif rem_size > largest:
+                    largest = rem_size
+            if largest < smallest_largest:
+                smallest_largest = largest
+                best_pair = (word1, word2)
+                print(best_pair, smallest_largest)
+    return best_pair
