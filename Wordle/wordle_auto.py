@@ -98,7 +98,7 @@ def retrieve_guess(game_list):
     return guess
 
 
-big_fucking_hash = {}
+big_fucking_hash = eval(open('big_fucking_hash_cache.txt').read().splitlines()[0])
 
 
 def auto_play(answer, verbose=False):
@@ -112,8 +112,8 @@ def auto_play(answer, verbose=False):
     while True:
         result = checker(guess, answer)
         game_chain += result
-        verbose_print(verbose, f"{guess} : {result}")
         game_list = reduce_by_guess_result(guess, result, game_list)
+        verbose_print(verbose, f"{guess} : {result} : {len(game_list)}")
 
         if result == "22222":
             break

@@ -2,5 +2,6 @@
 !word_list.txt
 !possible_results.txt
 !answer_list.txt
+!big_fucking_hash_cache.txt
 !*.py
 !*/
