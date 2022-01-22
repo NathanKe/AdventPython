@@ -98,7 +98,7 @@ def retrieve_guess(game_list):
     return guess
 
 
-arise_hash = {}
+big_fucking_hash = {}
 
 
 def auto_play(answer, verbose=False):
@@ -106,8 +106,12 @@ def auto_play(answer, verbose=False):
     steps = 1
     game_list = answer_list
     guess = 'arise'
+
+    game_chain = guess
+
     while True:
         result = checker(guess, answer)
+        game_chain += result
         verbose_print(verbose, f"{guess} : {result}")
         game_list = reduce_by_guess_result(guess, result, game_list)
 
@@ -116,14 +120,21 @@ def auto_play(answer, verbose=False):
 
         if len(game_list) == 1:
             guess = game_list[0]
+            big_fucking_hash[game_chain] = guess
         else:
-            if steps == 1 and result in arise_hash:
-                guess = arise_hash[result]
-            elif steps == 1 and result not in arise_hash:
-                guess = retrieve_guess(game_list)
-                arise_hash[result] = guess
+            if game_chain in big_fucking_hash:
+                guess = big_fucking_hash[game_chain]
             else:
                 guess = retrieve_guess(game_list)
+                big_fucking_hash[game_chain] = guess
+        game_chain += guess
+        # if steps == 1 and result in arise_hash:
+        #     guess = arise_hash[result]
+        # elif steps == 1 and result not in arise_hash:
+        #     guess = retrieve_guess(game_list)
+        #     arise_hash[result] = guess
+        # else:
+        #     guess = retrieve_guess(game_list)
 
         steps += 1
         if steps > 6:
