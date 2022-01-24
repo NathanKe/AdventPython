@@ -1,6 +1,7 @@
 # https://www.devangthakkar.com/wordle_archive/
 
 from itertools import product
+from collections import Counter
 
 data_word_list = open('word_list.txt').read().splitlines()
 answer_list = open('answer_list.txt').read().splitlines()
@@ -116,6 +117,7 @@ def auto_play(answer, verbose=False):
         verbose_print(verbose, f"{guess} : {result} : {len(game_list)}")
 
         if result == "22222":
+            big_fucking_hash[game_chain] = guess
             break
 
         if len(game_list) == 1:
@@ -135,6 +137,7 @@ def auto_play(answer, verbose=False):
     return steps
 
 
+# doesn't work too well
 def two_search():
     smallest_largest = len(answer_list)
     best_pair = ('xxxxx', 'yyyyy')
@@ -156,3 +159,17 @@ def two_search():
                 best_pair = (word1, word2)
                 print(best_pair, smallest_largest)
     return best_pair
+
+
+# gives results, results aren't helpful
+def triple_search():
+    most_common = [i[0] for i in Counter(''.join(answer_list)).most_common(15)]
+    for p in product(answer_list, answer_list):
+        common_count = sum([mc in ''.join(p) for mc in most_common[:12]])
+        if common_count == 10:
+            cur_set = set(''.join(p))
+            com_set = set(most_common)
+            left_overs = list(com_set.difference(cur_set))
+            has_all_leftovers = list(filter(lambda ww: all([l_o in ww for l_o in left_overs]), answer_list))
+            for w in has_all_leftovers:
+                print(p[0], p[1], w)
