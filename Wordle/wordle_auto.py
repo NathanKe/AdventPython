@@ -46,7 +46,7 @@ def most_reductive_word(guessable_words, word_list, limit=15000):
                 break
             if remainder_size > largest_remaining_group:
                 largest_remaining_group = remainder_size
-        if largest_remaining_group < smallest_largest_remaining_group:
+        if largest_remaining_group <= smallest_largest_remaining_group:
             smallest_largest_remaining_group = largest_remaining_group
             best_word = word
             if smallest_largest_remaining_group == 1:
@@ -99,14 +99,15 @@ def retrieve_guess(game_list):
     return guess
 
 
-big_fucking_hash = eval(open('big_fucking_hash_cache.txt').read().splitlines()[0])
+#big_fucking_hash = eval(open('big_fucking_hash_cache.txt').read().splitlines()[0])
+big_fucking_hash = {}
 
 
 def auto_play(answer, verbose=False):
     verbose_print(verbose, f"{answer} -----")
     steps = 1
     game_list = answer_list
-    guess = 'arise'
+    guess = 'later'
 
     game_chain = guess
 
@@ -130,6 +131,30 @@ def auto_play(answer, verbose=False):
                 guess = retrieve_guess(game_list)
                 big_fucking_hash[game_chain] = guess
         game_chain += guess
+        steps += 1
+        if steps > 6:
+            verbose_print(verbose, "Failure!")
+            break
+    return steps
+
+
+def auto_play_hard_mode(answer, verbose=False):
+    verbose_print(verbose, f"{answer} -----")
+    steps = 1
+    game_list = answer_list
+    guess = 'arise'
+
+    while True:
+        result = checker(guess, answer)
+        game_list = reduce_by_guess_result(guess, result, game_list)
+        verbose_print(verbose, f"{guess} : {result} : {len(game_list)}")
+
+        if result == "22222":
+            break
+        elif len(game_list) == 1:
+            guess = game_list[0]
+        else:
+            guess, _ = most_reductive_word(game_list, game_list)
         steps += 1
         if steps > 6:
             verbose_print(verbose, "Failure!")
