@@ -135,38 +135,3 @@ def auto_play(answer, start_guess):
         if steps > 6:
             break
     return steps
-
-
-def start_word_outcome_step_total(start_word, limit=float('inf')):
-    step_total = 0
-    for answer_word in tqdm(answer_list, start_word):
-        current_steps = auto_play(answer_word, start_word)
-        if current_steps > 6:
-            step_total = float('inf')
-            break
-        step_total += current_steps
-        if step_total > limit:
-            step_total = float('inf')
-            break
-    return step_total
-
-
-def find_best_start(search_set):
-    best_word = 'xxxxx'
-    best_step_count = float('inf')
-
-    for start_word in tqdm(search_set, "Main Search"):
-        total_steps_from_current_start_word = start_word_outcome_step_total(start_word, best_step_count)
-        if total_steps_from_current_start_word < best_step_count:
-            best_word = start_word
-            best_step_count = total_steps_from_current_start_word
-            print(f"New Best!: {best_word} with {best_step_count} steps")
-        else:
-            print(f"Failed: {start_word}")
-
-    return best_word, best_step_count
-
-
-test_set = ["later", "jazzy", "smith", "arise"]
-
-find_best_start(test_set)
