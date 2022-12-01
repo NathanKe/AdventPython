@@ -91,6 +91,9 @@ def retrieve_guess(game_list):
     if poss_redux == 1:
         guess = guess_from_poss
     else:
+        game_list_joined = ''.join(game_list)
+        worthwhile_guesses = [word for word in data_word_list if word not in game_list and
+                              sum([letter in game_list_joined for letter in word]) >= 4]
         guess_from_all, all_redux = most_reductive_word(data_word_list, game_list, poss_redux)
         if poss_redux <= all_redux:
             guess = guess_from_poss
