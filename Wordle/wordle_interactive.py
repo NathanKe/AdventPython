@@ -164,3 +164,21 @@ def free_play():
         if rem_len < 15:
             info = f"Remaining words: {game_list}"
             print(info)
+
+
+def four_search():
+    x = ''.join(answer_list)
+    q = [i[0] for i in Counter(x).most_common(20)]
+    count = 0
+    for a in answer_list:
+        if all([l in q for l in a]):
+            for b in answer_list:
+                if all([l not in a for l in b]) and all([l in q for l in b]):
+                    for c in answer_list:
+                        if all([l not in a+b for l in c]) and all([l in q for l in c]):
+                            for d in answer_list:
+                                if all([l in a+b+c+d for l in q]):
+                                    print(a,b,c,d)
+                                    count += 1
+                                    if count >= 10:
+                                        return

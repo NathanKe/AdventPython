@@ -1,0 +1,5 @@
+elves = open('01_input').read().split('\n\n')
+cal_sums = list(map(lambda x: sum(map(int, x.split('\n'))), elves))
+cal_sums.sort(reverse=True)
+print("Part 1: ", cal_sums[0])
+print("Part 2: ", sum(cal_sums[0:3]))
