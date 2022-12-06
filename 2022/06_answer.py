@@ -3,7 +3,7 @@ data_stream = open('06_input').read()
 
 # assumes such substring exists
 def first_n_length_distinct_substring(string, n):
-    for i in range(len(string)):
+    for i in range(len(string) - n):
         if len(set(string[i:i + n])) == n:
             return i + n
 
