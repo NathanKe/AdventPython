@@ -10,7 +10,7 @@ for line in distance_report_lines:
     sensor_beacons.append((sx, sy, bx, by))
 
 
-SEARCH_ROW = 2000000
+SEARCH_ROW = 10
 
 
 def calc_manhattan_distance(jx, jy, kx, ky):
@@ -61,16 +61,39 @@ def in_range_of_a_beacon(qx, qy):
 
 
 def set_builder(sx, sy, bx, by):
-    vis_set = set()
+    vis_set = []
     m_d = calc_manhattan_distance(sx, sy, bx, by)
     for vert_steps_taken in range(m_d + 1):
         for steps_remain in range(m_d - vert_steps_taken + 1):
-            vis_set.add((sx - steps_remain, sy - vert_steps_taken))
-            vis_set.add((sx + steps_remain, sy - vert_steps_taken))
-            vis_set.add((sx - steps_remain, sy + vert_steps_taken))
-            vis_set.add((sx + steps_remain, sy + vert_steps_taken))
+            vis_set.append((sx - steps_remain, sy - vert_steps_taken))
+            vis_set.append((sx + steps_remain, sy - vert_steps_taken))
+            vis_set.append((sx - steps_remain, sy + vert_steps_taken))
+            vis_set.append((sx + steps_remain, sy + vert_steps_taken))
     return vis_set
 
 
-mega_set = set().union(*[set_builder(*sb) for sb in sensor_beacons])
+def one_outside_of_range(sx, sy, bx, by):
+    m_d = calc_manhattan_distance(sx, sy, bx, by)
+
+    shell = []
+    for i in range(0, m_d + 1):
+        shell.append((sx + i + 1, sy + m_d - i))
+        shell.append((sx + i + 1, sy - m_d + i))
+        shell.append((sx - i + 1, sy + m_d - i))
+        shell.append((sx - i + 1, sy - m_d + i))
+
+    return shell
+
+# mega_set = set().union(*[set_builder(*sb) for sb in sensor_beacons])
 print("Done!")
+
+
+
+# current thought:  calculate 'shells' of each sensor - those spaces exactly one unit out of range
+# iterate over those, stopping when you find one that is out of range of
+# shell size is square of (range + 1)
+
+
+# pair-wise intersect "shells"?
+
+# work more with range limits, not sets/arrays of actual ranges
