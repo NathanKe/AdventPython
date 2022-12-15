@@ -17,24 +17,26 @@ def calc_manhattan_distance(jx, jy, kx, ky):
     return abs(jx - kx) + abs(jy - ky)
 
 
-cant_be_beacon = set()
+left_bound = 0
+right_bound = 0
 for sx, sy, bx, by in sensor_beacons:
 
     manhattan_distance = calc_manhattan_distance(sx, sy, bx, by)
-
-    if SEARCH_ROW in range(sy - manhattan_distance, sy + manhattan_distance + 1):
+################ rebuilding for bounds checking version
+    # how on earth do you handle adding and merging disjoint ranges?
+    if sy - manhattan_distance <= SEARCH_ROW <= sy + manhattan_distance:
         dist_to_search_row = abs(sy - SEARCH_ROW)
         remaining_distance = manhattan_distance - dist_to_search_row
-        cant_be_beacon.add(sx)
-        for offset in range(remaining_distance + 1):
-            cant_be_beacon.add(sx + offset)
-            cant_be_beacon.add(sx - offset)
+        # completely contained
+        # overlaps left side
+        # overlaps right side
+        # disjoint
 
 
+beacon_on_search_line_count = 0
 for sx, sy, bx, by in sensor_beacons:
     if by == SEARCH_ROW:
-        if bx in cant_be_beacon:
-            cant_be_beacon.remove(bx)
+        beacon_on_search_line_count += 1
 
 print("Part 1: ", len(cant_be_beacon))
 
