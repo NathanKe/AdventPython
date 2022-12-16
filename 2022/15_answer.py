@@ -14,20 +14,18 @@ def calc_manhattan_distance(jx, jy, kx, ky):
     return abs(jx - kx) + abs(jy - ky)
 
 
+# list must be pre sorted by left bound increasing
 def reduce_bound_pairs(pair_list):
-    pair_list.sort(key=lambda tu: tu[0])
     if len(pair_list) == 1:
         return pair_list
     elif len(pair_list) == 2:
         a_l, a_r = pair_list[0]
         b_l, b_r = pair_list[1]
         # completely contained
-        if b_l <= a_l <= a_r <= b_r or a_l <= b_l <= b_r <= a_r:
+        if a_l <= b_l <= b_r <= a_r:
             return [(min(a_l, b_l), max(a_r, b_r))]
         # overlaps
-        elif a_r >= b_l >= a_l or b_r >= a_l >= b_l:
-            return [(min(a_l, b_l), max(a_r, b_r))]
-        elif b_l <= a_r <= b_r or a_l <= b_r <= a_r:
+        elif b_l <= a_r:
             return [(min(a_l, b_l), max(a_r, b_r))]
         # disjoint
         else:
@@ -40,8 +38,9 @@ def reduce_bound_pairs(pair_list):
         while True:
             if pair_ix > cur_len - 2:
                 return pair_list
-            new_pairs = pair_list[:pair_ix] + reduce_bound_pairs(
-                [pair_list[pair_ix], pair_list[pair_ix + 1]]) + pair_list[pair_ix + 2:]
+            new_pairs = pair_list[:pair_ix] + \
+                reduce_bound_pairs([pair_list[pair_ix], pair_list[pair_ix + 1]]) + \
+                pair_list[pair_ix + 2:]
             if len(new_pairs) == cur_len:
                 pair_ix += 1
             else:
@@ -62,6 +61,7 @@ def positions_without_beacon(search_row, is_part_2):
                     bound_pairs.append((max(0, cur_left_bound), min(4000000, cur_right_bound)))
             else:
                 bound_pairs.append((cur_left_bound, cur_right_bound))
+            bound_pairs.sort(key=lambda tu: tu[0])
             bound_pairs = reduce_bound_pairs(bound_pairs)
     return bound_pairs
 
