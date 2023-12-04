@@ -18,10 +18,9 @@ for card in card_data:
     cur_ordinal = card[0]
     win_count = len(set(card[2]).intersection(card[3]))
     point_sum += int(2 ** (win_count - 1))
-    for j in range(card[1]):
-        for i in range(win_count):
-            # 1-indexed card numbers and adding to subsequent items in the list cancel out 2 off-by-ones
-            card_data[cur_ordinal + i][1] += 1
+    for i in range(win_count):
+        # 1-indexed card numbers and adding to subsequent items in the list cancel out 2 off-by-ones
+        card_data[cur_ordinal + i][1] += card[1]
 
 
 print(point_sum)
