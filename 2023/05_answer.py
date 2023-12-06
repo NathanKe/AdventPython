@@ -1,5 +1,4 @@
 import re
-from collections import defaultdict
 from itertools import chain
 
 map_sections = open('05_input').read().split('\n\n')
