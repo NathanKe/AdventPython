@@ -81,33 +81,34 @@ def split_forward(depth, start, length):
             # underlaps left
             if start < next_start:
                 # complete underlap, push through unchanged
-                if start + length < next_start:
+                if start + length <= next_start:
                     out_ranges.append((depth + 1, start, length))
                     length = 0
                 # partial underlap, push through partial
                 else:
                     used_length = next_start - start
 
-                    out_ranges.append((depth + 1, start, length - used_length))
+                    out_ranges.append((depth + 1, start, used_length))
                     length -= used_length
                     start += used_length
             # beyond right
             elif start >= next_start + next_length:
-                out_ranges.append((depth + 1, start, length))
-                length = 0
-            # overlaps
-            else:
+                tup_ind += 1
+            # full contain
+            elif start >= next_start and start + length <= next_start + next_length:
                 offset = start - next_start
                 # consumed
-                if length < next_length - offset:
-                    out_ranges.append((depth + 1, next_dest_start + offset, length))
-                    length = 0
-                # consume partial
-                else:
-                    out_ranges.append((depth + 1, next_dest_start + offset, next_length - offset))
-                    length -= (next_length - offset)
-                    start += (next_length - offset)
-                    tup_ind += 1
+                out_ranges.append((depth + 1, next_dest_start + offset, length))
+                length = 0
+            # consume partial
+            else:
+                used_length = next_start + next_length - start
+                offset = start - next_start
+                out_ranges.append((depth + 1, next_dest_start + offset, used_length))
+
+                length -= used_length
+                start += used_length
+                tup_ind += 1
 
     return out_ranges
 
@@ -119,3 +120,5 @@ ligt_ranges = list(chain(*map(lambda rng: split_forward(*rng), wate_ranges)))
 temp_ranges = list(chain(*map(lambda rng: split_forward(*rng), ligt_ranges)))
 humd_ranges = list(chain(*map(lambda rng: split_forward(*rng), temp_ranges)))
 loca_ranges = list(chain(*map(lambda rng: split_forward(*rng), humd_ranges)))
+
+print(min(map(lambda tu: tu[1], loca_ranges)))
