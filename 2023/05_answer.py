@@ -1,11 +1,12 @@
 import re
 from collections import defaultdict
+from itertools import chain
 
 map_sections = open('05_input').read().split('\n\n')
 
 
 def in_source_range(search_num, source_start, range_length):
-    return source_start <= search_num < source_start+range_length
+    return source_start <= search_num < source_start + range_length
 
 
 def source_to_dest(search_num, list_of_range_tuples):
@@ -48,12 +49,73 @@ seed_locas = [(seed, seed_to_location(seed)) for seed in seed_numbers]
 seed_locas.sort(key=lambda tu: tu[1])
 print(seed_locas[0][1])
 
-# range_bounds = list(zip(seed_numbers[::2], seed_numbers[1::2]))
-# unique_seeds = set()
-# for rng in range_bounds:
-#     for sd in range(rng[0], rng[0] + rng[1]):
-#         unique_seeds.add(sd)
+seed_to_soil.sort(key=lambda tu: tu[1])
+soil_to_fertilizer.sort(key=lambda tu: tu[1])
+fertilizer_to_water.sort(key=lambda tu: tu[1])
+water_to_light.sort(key=lambda tu: tu[1])
+light_to_temperature.sort(key=lambda tu: tu[1])
+temperature_to_humidity.sort(key=lambda tu: tu[1])
+humidity_to_location.sort(key=lambda tu: tu[1])
 
-#seed_locas_2 = [(seed, seed_to_location(seed)) for seed in unique_seeds]
-#seed_locas_2.sort(key=lambda tu: tu[1])
-#print(seed_locas_2[0][1])
+seed_zip = list(zip(seed_numbers[::2], seed_numbers[1::2]))
+nothing_to_seed = list(map(lambda tu: (0, tu[0], tu[1]), seed_zip))
+
+map_depth_chart = [nothing_to_seed, seed_to_soil, soil_to_fertilizer, fertilizer_to_water, water_to_light,
+                   light_to_temperature, temperature_to_humidity, humidity_to_location]
+
+
+def split_forward(depth, start, length):
+    next_data = map_depth_chart[depth + 1]
+    out_ranges = []
+    tup_ind = 0
+    while length:
+        # beyond next data, push through unchanged
+        if tup_ind >= len(next_data):
+            out_ranges.append((depth + 1, start, length))
+            length = 0
+        else:
+            next_dest_start = next_data[tup_ind][0]
+            next_start = next_data[tup_ind][1]
+            next_length = next_data[tup_ind][2]
+
+            # underlaps left
+            if start < next_start:
+                # complete underlap, push through unchanged
+                if start + length < next_start:
+                    out_ranges.append((depth + 1, start, length))
+                    length = 0
+                # partial underlap, push through partial
+                else:
+                    used_length = next_start - start
+
+                    out_ranges.append((depth + 1, start, length - used_length))
+                    length -= used_length
+                    start += used_length
+            # beyond right
+            elif start >= next_start + next_length:
+                out_ranges.append((depth + 1, start, length))
+                length = 0
+            # overlaps
+            else:
+                offset = start - next_start
+                # consumed
+                if length < next_length - offset:
+                    out_ranges.append((depth + 1, next_dest_start + offset, length))
+                    length = 0
+                # consume partial
+                else:
+                    out_ranges.append((depth + 1, next_dest_start + offset, next_length - offset))
+                    length -= (next_length - offset)
+                    start += (next_length - offset)
+                    tup_ind += 1
+
+    return out_ranges
+
+
+soil_ranges = list(chain(*map(lambda rng: split_forward(*rng), nothing_to_seed)))
+fert_ranges = list(chain(*map(lambda rng: split_forward(*rng), soil_ranges)))
+wate_ranges = list(chain(*map(lambda rng: split_forward(*rng), fert_ranges)))
+ligt_ranges = list(chain(*map(lambda rng: split_forward(*rng), wate_ranges)))
+temp_ranges = list(chain(*map(lambda rng: split_forward(*rng), ligt_ranges)))
+humd_ranges = list(chain(*map(lambda rng: split_forward(*rng), temp_ranges)))
+loca_ranges = list(chain(*map(lambda rng: split_forward(*rng), humd_ranges)))
