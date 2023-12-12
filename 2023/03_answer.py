@@ -14,9 +14,9 @@ def in_bounds_neighbors(r, c, ROW_MAX, COL_MAX):
 
     if r > 0:
         i_b_n.add((r - 1, c))
-        if col_num > 0:
+        if c > 0:
             i_b_n.add((r - 1, c - 1))
-        if col_num < COL_MAX:
+        if c < COL_MAX:
             i_b_n.add((r - 1, c + 1))
     if r < ROW_MAX:
         i_b_n.add((r + 1, c))
