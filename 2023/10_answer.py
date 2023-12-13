@@ -9,9 +9,6 @@ for r_n, row in enumerate(map_text):
     for c_n, c_v in enumerate(row):
         loc = r_n * (1 + 0j) + c_n * (0 + 1j)
         map_dict[loc] = c_v
-        map_dict[loc + 0.5] = '.'
-        map_dict[loc + 0.5j] = '.'
-        map_dict[loc + 0.5 + 0.5j] = '.'
         if c_v == "S":
             start_loc = loc
 
@@ -77,6 +74,93 @@ outside_set = set()
 inside_set = set()
 
 
+big_dict = {}
+loop_list = list(loop_set)
+for loop_loc in loop_set:
+    loop_item = map_dict[loop_loc]
+    loop_loc_real_3x = loop_loc.real * 3
+    loop_loc_imag_3x = loop_loc.imag * 3
+    if loop_item == 'F':
+        # ...
+        # .##
+        # .#.
+        big_dict[(loop_loc_real_3x + 0) + (loop_loc_imag_3x + 0) * 1j] = '.'
+        big_dict[(loop_loc_real_3x + 0) + (loop_loc_imag_3x + 1) * 1j] = '.'
+        big_dict[(loop_loc_real_3x + 0) + (loop_loc_imag_3x + 2) * 1j] = '.'
+        big_dict[(loop_loc_real_3x + 1) + (loop_loc_imag_3x + 0) * 1j] = '.'
+        big_dict[(loop_loc_real_3x + 1) + (loop_loc_imag_3x + 1) * 1j] = '#'
+        big_dict[(loop_loc_real_3x + 1) + (loop_loc_imag_3x + 2) * 1j] = '#'
+        big_dict[(loop_loc_real_3x + 2) + (loop_loc_imag_3x + 0) * 1j] = '.'
+        big_dict[(loop_loc_real_3x + 2) + (loop_loc_imag_3x + 1) * 1j] = '#'
+        big_dict[(loop_loc_real_3x + 2) + (loop_loc_imag_3x + 2) * 1j] = '.'
+    elif loop_item == 'J':
+        # .#.
+        # ##.
+        # ...
+        big_dict[(loop_loc_real_3x + 0) + (loop_loc_imag_3x + 0) * 1j] = '.'
+        big_dict[(loop_loc_real_3x + 0) + (loop_loc_imag_3x + 1) * 1j] = '#'
+        big_dict[(loop_loc_real_3x + 0) + (loop_loc_imag_3x + 2) * 1j] = '.'
+        big_dict[(loop_loc_real_3x + 1) + (loop_loc_imag_3x + 0) * 1j] = '#'
+        big_dict[(loop_loc_real_3x + 1) + (loop_loc_imag_3x + 1) * 1j] = '#'
+        big_dict[(loop_loc_real_3x + 1) + (loop_loc_imag_3x + 2) * 1j] = '.'
+        big_dict[(loop_loc_real_3x + 2) + (loop_loc_imag_3x + 0) * 1j] = '.'
+        big_dict[(loop_loc_real_3x + 2) + (loop_loc_imag_3x + 1) * 1j] = '.'
+        big_dict[(loop_loc_real_3x + 2) + (loop_loc_imag_3x + 2) * 1j] = '.'
+    elif loop_item == 'L':
+        # .#.
+        # .##
+        # ...
+        big_dict[(loop_loc_real_3x + 0) + (loop_loc_imag_3x + 0) * 1j] = '.'
+        big_dict[(loop_loc_real_3x + 0) + (loop_loc_imag_3x + 1) * 1j] = '#'
+        big_dict[(loop_loc_real_3x + 0) + (loop_loc_imag_3x + 2) * 1j] = '.'
+        big_dict[(loop_loc_real_3x + 1) + (loop_loc_imag_3x + 0) * 1j] = '.'
+        big_dict[(loop_loc_real_3x + 1) + (loop_loc_imag_3x + 1) * 1j] = '#'
+        big_dict[(loop_loc_real_3x + 1) + (loop_loc_imag_3x + 2) * 1j] = '#'
+        big_dict[(loop_loc_real_3x + 2) + (loop_loc_imag_3x + 0) * 1j] = '.'
+        big_dict[(loop_loc_real_3x + 2) + (loop_loc_imag_3x + 1) * 1j] = '.'
+        big_dict[(loop_loc_real_3x + 2) + (loop_loc_imag_3x + 2) * 1j] = '.'
+    elif loop_item == '7':
+        # ...
+        # ##.
+        # .#.
+        big_dict[(loop_loc_real_3x + 0) + (loop_loc_imag_3x + 0) * 1j] = '.'
+        big_dict[(loop_loc_real_3x + 0) + (loop_loc_imag_3x + 1) * 1j] = '.'
+        big_dict[(loop_loc_real_3x + 0) + (loop_loc_imag_3x + 2) * 1j] = '.'
+        big_dict[(loop_loc_real_3x + 1) + (loop_loc_imag_3x + 0) * 1j] = '#'
+        big_dict[(loop_loc_real_3x + 1) + (loop_loc_imag_3x + 1) * 1j] = '#'
+        big_dict[(loop_loc_real_3x + 1) + (loop_loc_imag_3x + 2) * 1j] = '.'
+        big_dict[(loop_loc_real_3x + 2) + (loop_loc_imag_3x + 0) * 1j] = '.'
+        big_dict[(loop_loc_real_3x + 2) + (loop_loc_imag_3x + 1) * 1j] = '#'
+        big_dict[(loop_loc_real_3x + 2) + (loop_loc_imag_3x + 2) * 1j] = '.'
+    elif loop_item == '|':
+        # .#.
+        # .#.
+        # .#.
+        big_dict[(loop_loc_real_3x + 0) + (loop_loc_imag_3x + 0) * 1j] = '.'
+        big_dict[(loop_loc_real_3x + 0) + (loop_loc_imag_3x + 1) * 1j] = '#'
+        big_dict[(loop_loc_real_3x + 0) + (loop_loc_imag_3x + 2) * 1j] = '.'
+        big_dict[(loop_loc_real_3x + 1) + (loop_loc_imag_3x + 0) * 1j] = '.'
+        big_dict[(loop_loc_real_3x + 1) + (loop_loc_imag_3x + 1) * 1j] = '#'
+        big_dict[(loop_loc_real_3x + 1) + (loop_loc_imag_3x + 2) * 1j] = '.'
+        big_dict[(loop_loc_real_3x + 2) + (loop_loc_imag_3x + 0) * 1j] = '.'
+        big_dict[(loop_loc_real_3x + 2) + (loop_loc_imag_3x + 1) * 1j] = '#'
+        big_dict[(loop_loc_real_3x + 2) + (loop_loc_imag_3x + 2) * 1j] = '.'
+    elif loop_item == '-':
+        # .#.
+        # .#.
+        # .#.
+        big_dict[(loop_loc_real_3x + 0) + (loop_loc_imag_3x + 0) * 1j] = '.'
+        big_dict[(loop_loc_real_3x + 0) + (loop_loc_imag_3x + 1) * 1j] = '.'
+        big_dict[(loop_loc_real_3x + 0) + (loop_loc_imag_3x + 2) * 1j] = '.'
+        big_dict[(loop_loc_real_3x + 1) + (loop_loc_imag_3x + 0) * 1j] = '#'
+        big_dict[(loop_loc_real_3x + 1) + (loop_loc_imag_3x + 1) * 1j] = '#'
+        big_dict[(loop_loc_real_3x + 1) + (loop_loc_imag_3x + 2) * 1j] = '#'
+        big_dict[(loop_loc_real_3x + 2) + (loop_loc_imag_3x + 0) * 1j] = '.'
+        big_dict[(loop_loc_real_3x + 2) + (loop_loc_imag_3x + 1) * 1j] = '.'
+        big_dict[(loop_loc_real_3x + 2) + (loop_loc_imag_3x + 2) * 1j] = '.'
+
+
+
 def in_bounds_neighbors(i_loc, ROW_MAX, COL_MAX):
     i_b_n = set()
     r = i_loc.real
@@ -102,78 +186,6 @@ def in_bounds_neighbors(i_loc, ROW_MAX, COL_MAX):
     return set([a for a in map(lambda tu: complex(*tu), i_b_n) if map_dict[a] != 'X'])
 
 
-def pretty_print(frontier):
-    out_str = ""
-    for r_v in range(math.floor(MAX_ROW) + 1):
-        for c_v in range(math.floor(MAX_COL) + 1):
-            m_v = map_dict[r_v + c_v * 1j]
-            if r_v + c_v * 1j in frontier:
-                m_v = 'X'
-            if m_v == '.':
-                m_v = ' '
-            out_str += m_v
-        out_str += "\n"
-    return out_str
-
-
-# temp pre calculate
-map_dict[start_loc] = 'F'
-
-verts = ['|', 'F', 'J', '7', 'L']
-horzs = ['-', 'F', 'J', '7', 'L']
-
-for key, value in map_dict.items():
-    if key not in loop_set:
-        map_dict[key] = '.'
-
-    # block corner passage?
-    if key.imag % 1 != 0 and key.real % 1 != 0:
-        map_dict[key] = "X"
-
-    # between rows
-    if key.imag % 1 == 0 and key.real % 1 != 0:
-        if key.real >= MAX_ROW:
-            # padding on outside
-            pass
-        else:
-            top = map_dict[key - 0.5]
-            bottom = map_dict[key + 0.5]
-            # blockages
-            if top == '|' and bottom in verts:
-                map_dict[key] = 'X'
-            if bottom == '|' and top in verts:
-                map_dict[key] = 'X'
-            if top == 'F' and bottom == 'L':
-                map_dict[key] = 'X'
-            if top == 'F' and bottom == 'J':
-                map_dict[key] = 'X'
-            if top == '7' and bottom == 'J':
-                map_dict[key] = 'X'
-            if top == '7' and bottom == 'L':
-                map_dict[key] = 'X'
-    # between cols
-    elif key.imag % 1 != 0 and key.real % 1 == 0:
-        if key.imag >= MAX_COL:
-            # padding on outside
-            pass
-        else:
-            left = map_dict[key - 0.5j]
-            right = map_dict[key + 0.5j]
-            # blockages
-            if left == '-' and right in horzs:
-                map_dict[key] = 'X'
-            if right == '-' and left in horzs:
-                map_dict[key] = 'X'
-            if left == 'F' and right == '7':
-                map_dict[key] = 'X'
-            if left == 'F' and right == 'J':
-                map_dict[key] = 'X'
-            if left == 'L' and right == 'J':
-                map_dict[key] = 'X'
-            if left == 'L' and right == 'F':
-                map_dict[key] = 'X'
-
-
 def bfs(i_loc):
     print("======================================")
     outside = False
@@ -181,7 +193,6 @@ def bfs(i_loc):
     frontier = {i_loc}
     while frontier:
         expandee = frontier.pop()
-        print(pretty_print(frontier))
         if expandee.real == 0 or expandee.imag == 0 or expandee.real == MAX_ROW or expandee.imag == MAX_COL:
             outside = True
         neighbor_group.add(expandee)
@@ -194,17 +205,14 @@ def bfs(i_loc):
     return neighbor_group, outside
 
 
-while search_set:
-    search_loc = search_set.pop()
-    group, res = bfs(search_loc)
-    if res:
-        outside_set.update(group)
-    else:
-        inside_set.update(group)
+# while search_set:
+#     search_loc = search_set.pop()
+#     group, res = bfs(search_loc)
+#     if res:
+#         outside_set.update(group)
+#     else:
+#         inside_set.update(group)
 
 
 def integer_points(i_set):
     return [a for a in i_set if a.real % 1 == 0 and a.imag % 1 == 0]
-
-
-print(len(integer_points(inside_set)))
