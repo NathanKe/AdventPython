@@ -68,11 +68,10 @@ print(steps)
 # else add whole neighbor set to "STUCK IN LOOP", subtract from remaining set
 # OUTSIDE + INSIDE + LOOP _should_ equal size of grid
 # answer is size of INSIDE
-grid_set = set(map_dict.keys())
-search_set = grid_set.difference(loop_set)
-outside_set = set()
-inside_set = set()
 
+
+# temp pre-compute true value of start_loc
+map_dict[start_loc] = 'F'
 
 big_dict = {}
 loop_list = list(loop_set)
@@ -84,135 +83,139 @@ for loop_loc in loop_set:
         # ...
         # .##
         # .#.
-        big_dict[(loop_loc_real_3x + 0) + (loop_loc_imag_3x + 0) * 1j] = '.'
-        big_dict[(loop_loc_real_3x + 0) + (loop_loc_imag_3x + 1) * 1j] = '.'
-        big_dict[(loop_loc_real_3x + 0) + (loop_loc_imag_3x + 2) * 1j] = '.'
-        big_dict[(loop_loc_real_3x + 1) + (loop_loc_imag_3x + 0) * 1j] = '.'
+        big_dict[(loop_loc_real_3x + 0) + (loop_loc_imag_3x + 0) * 1j] = ' '
+        big_dict[(loop_loc_real_3x + 0) + (loop_loc_imag_3x + 1) * 1j] = ' '
+        big_dict[(loop_loc_real_3x + 0) + (loop_loc_imag_3x + 2) * 1j] = ' '
+        big_dict[(loop_loc_real_3x + 1) + (loop_loc_imag_3x + 0) * 1j] = ' '
         big_dict[(loop_loc_real_3x + 1) + (loop_loc_imag_3x + 1) * 1j] = '#'
         big_dict[(loop_loc_real_3x + 1) + (loop_loc_imag_3x + 2) * 1j] = '#'
-        big_dict[(loop_loc_real_3x + 2) + (loop_loc_imag_3x + 0) * 1j] = '.'
+        big_dict[(loop_loc_real_3x + 2) + (loop_loc_imag_3x + 0) * 1j] = ' '
         big_dict[(loop_loc_real_3x + 2) + (loop_loc_imag_3x + 1) * 1j] = '#'
-        big_dict[(loop_loc_real_3x + 2) + (loop_loc_imag_3x + 2) * 1j] = '.'
+        big_dict[(loop_loc_real_3x + 2) + (loop_loc_imag_3x + 2) * 1j] = ' '
     elif loop_item == 'J':
         # .#.
         # ##.
         # ...
-        big_dict[(loop_loc_real_3x + 0) + (loop_loc_imag_3x + 0) * 1j] = '.'
+        big_dict[(loop_loc_real_3x + 0) + (loop_loc_imag_3x + 0) * 1j] = ' '
         big_dict[(loop_loc_real_3x + 0) + (loop_loc_imag_3x + 1) * 1j] = '#'
-        big_dict[(loop_loc_real_3x + 0) + (loop_loc_imag_3x + 2) * 1j] = '.'
+        big_dict[(loop_loc_real_3x + 0) + (loop_loc_imag_3x + 2) * 1j] = ' '
         big_dict[(loop_loc_real_3x + 1) + (loop_loc_imag_3x + 0) * 1j] = '#'
         big_dict[(loop_loc_real_3x + 1) + (loop_loc_imag_3x + 1) * 1j] = '#'
-        big_dict[(loop_loc_real_3x + 1) + (loop_loc_imag_3x + 2) * 1j] = '.'
-        big_dict[(loop_loc_real_3x + 2) + (loop_loc_imag_3x + 0) * 1j] = '.'
-        big_dict[(loop_loc_real_3x + 2) + (loop_loc_imag_3x + 1) * 1j] = '.'
-        big_dict[(loop_loc_real_3x + 2) + (loop_loc_imag_3x + 2) * 1j] = '.'
+        big_dict[(loop_loc_real_3x + 1) + (loop_loc_imag_3x + 2) * 1j] = ' '
+        big_dict[(loop_loc_real_3x + 2) + (loop_loc_imag_3x + 0) * 1j] = ' '
+        big_dict[(loop_loc_real_3x + 2) + (loop_loc_imag_3x + 1) * 1j] = ' '
+        big_dict[(loop_loc_real_3x + 2) + (loop_loc_imag_3x + 2) * 1j] = ' '
     elif loop_item == 'L':
         # .#.
         # .##
         # ...
-        big_dict[(loop_loc_real_3x + 0) + (loop_loc_imag_3x + 0) * 1j] = '.'
+        big_dict[(loop_loc_real_3x + 0) + (loop_loc_imag_3x + 0) * 1j] = ' '
         big_dict[(loop_loc_real_3x + 0) + (loop_loc_imag_3x + 1) * 1j] = '#'
-        big_dict[(loop_loc_real_3x + 0) + (loop_loc_imag_3x + 2) * 1j] = '.'
-        big_dict[(loop_loc_real_3x + 1) + (loop_loc_imag_3x + 0) * 1j] = '.'
+        big_dict[(loop_loc_real_3x + 0) + (loop_loc_imag_3x + 2) * 1j] = ' '
+        big_dict[(loop_loc_real_3x + 1) + (loop_loc_imag_3x + 0) * 1j] = ' '
         big_dict[(loop_loc_real_3x + 1) + (loop_loc_imag_3x + 1) * 1j] = '#'
         big_dict[(loop_loc_real_3x + 1) + (loop_loc_imag_3x + 2) * 1j] = '#'
-        big_dict[(loop_loc_real_3x + 2) + (loop_loc_imag_3x + 0) * 1j] = '.'
-        big_dict[(loop_loc_real_3x + 2) + (loop_loc_imag_3x + 1) * 1j] = '.'
-        big_dict[(loop_loc_real_3x + 2) + (loop_loc_imag_3x + 2) * 1j] = '.'
+        big_dict[(loop_loc_real_3x + 2) + (loop_loc_imag_3x + 0) * 1j] = ' '
+        big_dict[(loop_loc_real_3x + 2) + (loop_loc_imag_3x + 1) * 1j] = ' '
+        big_dict[(loop_loc_real_3x + 2) + (loop_loc_imag_3x + 2) * 1j] = ' '
     elif loop_item == '7':
         # ...
         # ##.
         # .#.
-        big_dict[(loop_loc_real_3x + 0) + (loop_loc_imag_3x + 0) * 1j] = '.'
-        big_dict[(loop_loc_real_3x + 0) + (loop_loc_imag_3x + 1) * 1j] = '.'
-        big_dict[(loop_loc_real_3x + 0) + (loop_loc_imag_3x + 2) * 1j] = '.'
+        big_dict[(loop_loc_real_3x + 0) + (loop_loc_imag_3x + 0) * 1j] = ' '
+        big_dict[(loop_loc_real_3x + 0) + (loop_loc_imag_3x + 1) * 1j] = ' '
+        big_dict[(loop_loc_real_3x + 0) + (loop_loc_imag_3x + 2) * 1j] = ' '
         big_dict[(loop_loc_real_3x + 1) + (loop_loc_imag_3x + 0) * 1j] = '#'
         big_dict[(loop_loc_real_3x + 1) + (loop_loc_imag_3x + 1) * 1j] = '#'
-        big_dict[(loop_loc_real_3x + 1) + (loop_loc_imag_3x + 2) * 1j] = '.'
-        big_dict[(loop_loc_real_3x + 2) + (loop_loc_imag_3x + 0) * 1j] = '.'
+        big_dict[(loop_loc_real_3x + 1) + (loop_loc_imag_3x + 2) * 1j] = ' '
+        big_dict[(loop_loc_real_3x + 2) + (loop_loc_imag_3x + 0) * 1j] = ' '
         big_dict[(loop_loc_real_3x + 2) + (loop_loc_imag_3x + 1) * 1j] = '#'
-        big_dict[(loop_loc_real_3x + 2) + (loop_loc_imag_3x + 2) * 1j] = '.'
+        big_dict[(loop_loc_real_3x + 2) + (loop_loc_imag_3x + 2) * 1j] = ' '
     elif loop_item == '|':
         # .#.
         # .#.
         # .#.
-        big_dict[(loop_loc_real_3x + 0) + (loop_loc_imag_3x + 0) * 1j] = '.'
+        big_dict[(loop_loc_real_3x + 0) + (loop_loc_imag_3x + 0) * 1j] = ' '
         big_dict[(loop_loc_real_3x + 0) + (loop_loc_imag_3x + 1) * 1j] = '#'
-        big_dict[(loop_loc_real_3x + 0) + (loop_loc_imag_3x + 2) * 1j] = '.'
-        big_dict[(loop_loc_real_3x + 1) + (loop_loc_imag_3x + 0) * 1j] = '.'
+        big_dict[(loop_loc_real_3x + 0) + (loop_loc_imag_3x + 2) * 1j] = ' '
+        big_dict[(loop_loc_real_3x + 1) + (loop_loc_imag_3x + 0) * 1j] = ' '
         big_dict[(loop_loc_real_3x + 1) + (loop_loc_imag_3x + 1) * 1j] = '#'
-        big_dict[(loop_loc_real_3x + 1) + (loop_loc_imag_3x + 2) * 1j] = '.'
-        big_dict[(loop_loc_real_3x + 2) + (loop_loc_imag_3x + 0) * 1j] = '.'
+        big_dict[(loop_loc_real_3x + 1) + (loop_loc_imag_3x + 2) * 1j] = ' '
+        big_dict[(loop_loc_real_3x + 2) + (loop_loc_imag_3x + 0) * 1j] = ' '
         big_dict[(loop_loc_real_3x + 2) + (loop_loc_imag_3x + 1) * 1j] = '#'
-        big_dict[(loop_loc_real_3x + 2) + (loop_loc_imag_3x + 2) * 1j] = '.'
+        big_dict[(loop_loc_real_3x + 2) + (loop_loc_imag_3x + 2) * 1j] = ' '
     elif loop_item == '-':
         # .#.
         # .#.
         # .#.
-        big_dict[(loop_loc_real_3x + 0) + (loop_loc_imag_3x + 0) * 1j] = '.'
-        big_dict[(loop_loc_real_3x + 0) + (loop_loc_imag_3x + 1) * 1j] = '.'
-        big_dict[(loop_loc_real_3x + 0) + (loop_loc_imag_3x + 2) * 1j] = '.'
+        big_dict[(loop_loc_real_3x + 0) + (loop_loc_imag_3x + 0) * 1j] = ' '
+        big_dict[(loop_loc_real_3x + 0) + (loop_loc_imag_3x + 1) * 1j] = ' '
+        big_dict[(loop_loc_real_3x + 0) + (loop_loc_imag_3x + 2) * 1j] = ' '
         big_dict[(loop_loc_real_3x + 1) + (loop_loc_imag_3x + 0) * 1j] = '#'
         big_dict[(loop_loc_real_3x + 1) + (loop_loc_imag_3x + 1) * 1j] = '#'
         big_dict[(loop_loc_real_3x + 1) + (loop_loc_imag_3x + 2) * 1j] = '#'
-        big_dict[(loop_loc_real_3x + 2) + (loop_loc_imag_3x + 0) * 1j] = '.'
-        big_dict[(loop_loc_real_3x + 2) + (loop_loc_imag_3x + 1) * 1j] = '.'
-        big_dict[(loop_loc_real_3x + 2) + (loop_loc_imag_3x + 2) * 1j] = '.'
+        big_dict[(loop_loc_real_3x + 2) + (loop_loc_imag_3x + 0) * 1j] = ' '
+        big_dict[(loop_loc_real_3x + 2) + (loop_loc_imag_3x + 1) * 1j] = ' '
+        big_dict[(loop_loc_real_3x + 2) + (loop_loc_imag_3x + 2) * 1j] = ' '
 
 
+BIG_MAX_COL = int(max(map(lambda c: c.imag, big_dict.keys())))
+BIG_MAX_ROW = int(max(map(lambda c: c.real, big_dict.keys())))
+BIG_MIN_ROW = int(min(map(lambda c: c.real, big_dict.keys())))
+BIG_MIN_COL = int(min(map(lambda c: c.imag, big_dict.keys())))
 
-def in_bounds_neighbors(i_loc, ROW_MAX, COL_MAX):
-    i_b_n = set()
-    r = i_loc.real
-    c = i_loc.imag
-    if c > 0:
-        i_b_n.add((r, c - 0.5))
-    if c < COL_MAX:
-        i_b_n.add((r, c + 0.5))
+for r in range(BIG_MIN_ROW - 1, BIG_MAX_ROW + 1):
+    for c in range(BIG_MIN_COL - 1, BIG_MAX_COL +1):
+        if r+c*1j not in big_dict.keys():
+            big_dict[r+c*1j] = ' '
 
-    if r > 0:
-        i_b_n.add((r - 0.5, c))
-        if c > 0:
-            i_b_n.add((r - 0.5, c - 0.5))
-        if c < COL_MAX:
-            i_b_n.add((r - 0.5, c + 0.5))
-    if r < ROW_MAX:
-        i_b_n.add((r + 0.5, c))
-        if c > 0:
-            i_b_n.add((r + 0.5, c - 0.5))
-        if c < COL_MAX:
-            i_b_n.add((r + 0.5, c + 0.5))
 
-    return set([a for a in map(lambda tu: complex(*tu), i_b_n) if map_dict[a] != 'X'])
+grid_set = set(big_dict.keys())
+search_set = grid_set.difference(loop_set)
+outside_set = set()
+inside_set = set()
+
+
+def in_bounds_un_blocked_neighbors(i_loc, mn_row, mx_row, mn_col, mx_col):
+    i_r = i_loc.real
+    i_c = i_loc.imag
+
+    out_set = []
+
+    if i_r > mn_row:
+        out_set.append(i_r - 1 + i_c*1j)
+        if i_c > mn_col:
+            out_set.append(i_r - 1 + (i_c - 1)*1j)
+        if i_c < mx_col:
+            out_set.append(i_r - 1 + (i_c + 1) * 1j)
+    if i_r < mx_row:
+        out_set.append(i_r + 1 + i_c*1j)
+        if i_c > mn_col:
+            out_set.append(i_r + 1 + (i_c - 1)*1j)
+        if i_c < mx_col:
+            out_set.append(i_r + 1 + (i_c + 1) * 1j)
+    if i_c > mn_col:
+        out_set.append(i_r + (i_c - 1) * 1j)
+    if i_c < mx_col:
+        out_set.append(i_r + (i_c + 1) * 1j)
+
+    return set([a for a in out_set if big_dict[a] != '#'])
 
 
 def bfs(i_loc):
-    print("======================================")
     outside = False
     neighbor_group = set()
     frontier = {i_loc}
     while frontier:
         expandee = frontier.pop()
-        if expandee.real == 0 or expandee.imag == 0 or expandee.real == MAX_ROW or expandee.imag == MAX_COL:
+        if expandee.real == BIG_MIN_ROW or expandee.imag == BIG_MIN_ROW or expandee.real == BIG_MAX_ROW or expandee.imag == BIG_MAX_COL:
             outside = True
         neighbor_group.add(expandee)
-        expansion = in_bounds_neighbors(expandee, MAX_ROW, MAX_COL)
-        expansion.difference_update(loop_set)
-        expansion = [e for e in expansion if map_dict[e] != 'X']
+        expansion = in_bounds_un_blocked_neighbors(expandee, BIG_MIN_ROW, BIG_MAX_ROW, BIG_MIN_COL, BIG_MAX_COL)
 
         frontier.update(expansion)
-        frontier.difference_update(neighbor_group)
     return neighbor_group, outside
 
 
-# while search_set:
-#     search_loc = search_set.pop()
-#     group, res = bfs(search_loc)
-#     if res:
-#         outside_set.update(group)
-#     else:
-#         inside_set.update(group)
 
 
-def integer_points(i_set):
-    return [a for a in i_set if a.real % 1 == 0 and a.imag % 1 == 0]
