@@ -164,8 +164,8 @@ BIG_MAX_ROW = int(max(map(lambda c: c.real, big_dict.keys())))
 BIG_MIN_ROW = int(min(map(lambda c: c.real, big_dict.keys())))
 BIG_MIN_COL = int(min(map(lambda c: c.imag, big_dict.keys())))
 
-for r in range(BIG_MIN_ROW - 1, BIG_MAX_ROW + 1):
-    for c in range(BIG_MIN_COL - 1, BIG_MAX_COL +1):
+for r in range(BIG_MIN_ROW, BIG_MAX_ROW + 1):
+    for c in range(BIG_MIN_COL, BIG_MAX_COL + 1):
         if r+c*1j not in big_dict.keys():
             big_dict[r+c*1j] = ' '
 
@@ -224,7 +224,6 @@ def bfs(i_loc):
 outside_set = set()
 inside_set = set()
 while search_set:
-    print(len(search_set), len(outside_set), len(inside_set))
     search_item = search_set.pop()
     bfs_g, bfs_t = bfs(search_item)
     if bfs_t:
