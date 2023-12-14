@@ -211,10 +211,13 @@ def bfs(i_loc):
         neighbor_set.update(ibn)
         frontier.update(ibn)
         # print('----', len(neighbor_set), len(frontier))
-        if expandee.real in [BIG_MIN_ROW, BIG_MAX_ROW]:
-            outside = True
-        if expandee.imag in [BIG_MIN_COL, BIG_MAX_COL]:
-            outside = True
+        if outside:
+            pass
+        else:
+            if expandee.real in [BIG_MIN_ROW, BIG_MAX_ROW]:
+                outside = True
+            if expandee.imag in [BIG_MIN_COL, BIG_MAX_COL]:
+                outside = True
     return neighbor_set, outside
 
 
