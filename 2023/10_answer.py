@@ -71,7 +71,7 @@ print(steps)
 
 
 # temp pre-compute true value of start_loc
-map_dict[start_loc] = 'F'
+map_dict[start_loc] = '|'
 
 big_dict = {}
 loop_list = list(loop_set)
@@ -171,51 +171,64 @@ for r in range(BIG_MIN_ROW - 1, BIG_MAX_ROW + 1):
 
 
 grid_set = set(big_dict.keys())
-search_set = grid_set.difference(loop_set)
-outside_set = set()
-inside_set = set()
 
 
-def in_bounds_un_blocked_neighbors(i_loc, mn_row, mx_row, mn_col, mx_col):
-    i_r = i_loc.real
-    i_c = i_loc.imag
+def pretty_print():
+    out = ""
+    for r in range(BIG_MIN_ROW, BIG_MAX_ROW):
+        for c in range(BIG_MIN_COL, BIG_MAX_COL):
+            out += big_dict[r + c * 1j]
+        out += "\n"
+    return out
 
-    out_set = []
 
-    if i_r > mn_row:
-        out_set.append(i_r - 1 + i_c*1j)
-        if i_c > mn_col:
-            out_set.append(i_r - 1 + (i_c - 1)*1j)
-        if i_c < mx_col:
-            out_set.append(i_r - 1 + (i_c + 1) * 1j)
-    if i_r < mx_row:
-        out_set.append(i_r + 1 + i_c*1j)
-        if i_c > mn_col:
-            out_set.append(i_r + 1 + (i_c - 1)*1j)
-        if i_c < mx_col:
-            out_set.append(i_r + 1 + (i_c + 1) * 1j)
-    if i_c > mn_col:
-        out_set.append(i_r + (i_c - 1) * 1j)
-    if i_c < mx_col:
-        out_set.append(i_r + (i_c + 1) * 1j)
+def in_bounds_non_block_neighbors(i_loc, s_ngb):
+    test_ngb = [i_loc + 1,
+                i_loc - 1,
+                i_loc + 1j,
+                i_loc - 1j,
+                i_loc + 1 + 1j,
+                i_loc + 1 - 1j,
+                i_loc - 1 + 1j,
+                i_loc - 1 - 1j]
+    in_bound_ngb = [i for i in test_ngb if
+                    BIG_MIN_ROW <= i.real <= BIG_MAX_ROW and BIG_MIN_COL <= i.imag <= BIG_MAX_COL]
+    non_block_ngb = [i for i in in_bound_ngb if big_dict[i] != '#']
+    new_ngb = [i for i in non_block_ngb if i not in s_ngb]
+    return set(new_ngb)
 
-    return set([a for a in out_set if big_dict[a] != '#'])
+
+search_set = set([k for k, v in big_dict.items() if v != '#'])
 
 
 def bfs(i_loc):
-    outside = False
-    neighbor_group = set()
     frontier = {i_loc}
+    neighbor_set = {i_loc}
+    outside = False
     while frontier:
         expandee = frontier.pop()
-        if expandee.real == BIG_MIN_ROW or expandee.imag == BIG_MIN_ROW or expandee.real == BIG_MAX_ROW or expandee.imag == BIG_MAX_COL:
+        ibn = in_bounds_non_block_neighbors(expandee, neighbor_set)
+        neighbor_set.update(ibn)
+        frontier.update(ibn)
+        # print('----', len(neighbor_set), len(frontier))
+        if expandee.real in [BIG_MIN_ROW, BIG_MAX_ROW]:
             outside = True
-        neighbor_group.add(expandee)
-        expansion = in_bounds_un_blocked_neighbors(expandee, BIG_MIN_ROW, BIG_MAX_ROW, BIG_MIN_COL, BIG_MAX_COL)
-
-        frontier.update(expansion)
-    return neighbor_group, outside
+        if expandee.imag in [BIG_MIN_COL, BIG_MAX_COL]:
+            outside = True
+    return neighbor_set, outside
 
 
+outside_set = set()
+inside_set = set()
+while search_set:
+    print(len(search_set), len(outside_set), len(inside_set))
+    search_item = search_set.pop()
+    bfs_g, bfs_t = bfs(search_item)
+    if bfs_t:
+        outside_set.update(bfs_g)
+    else:
+        inside_set.update(bfs_g)
+    search_set.difference_update(bfs_g)
 
-
+quasi_integer_inside_list = [x for x in list(inside_set) if x.real % 3 == 1 and x.imag % 3 == 1]
+print(len(quasi_integer_inside_list))
