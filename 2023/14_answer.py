@@ -43,7 +43,15 @@ def load_calc(i_mat):
     return load
 
 
+load_iter_dict = {}
 
+for i in range(100):
+    load = load_calc(rock_matrix)
+    if load in load_iter_dict.keys():
+        load_iter_dict[load].append(i)
+    else:
+        load_iter_dict[load] = [i]
+    rock_matrix = shuffle_cycle(rock_matrix)
 
 
 # print(load_calc(shuffle_north(rock_matrix)))
