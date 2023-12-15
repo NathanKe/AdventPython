@@ -11,8 +11,7 @@ def hash_val(i_dq):
     val = 0
     while i_dq:
         cur = i_dq.popleft()
-        ascii = ord(cur)
-        val += ascii
+        val += ord(cur)
         val *= 17
         val %= 256
     return val
@@ -37,9 +36,9 @@ def proc_eq(i_str):
     i_box = hash_val(deque(label))
     focal = int(focal_str)
     label_in_box = False
-    for lens in box_dict[i_box]:
+    for ix, lens in enumerate(box_dict[i_box]):
         if lens[0] == label:
-            box_dict[i_box][1] = (label, focal)
+            box_dict[i_box][ix] = (label, focal)
             label_in_box = True
             break
     if not label_in_box:
