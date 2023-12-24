@@ -49,18 +49,18 @@ def long_a_star():
             longest_known_cost[k] = -1
 
     while incomplete_paths:
-        incomplete_paths.sort(key=lambda pt: (len(pt), cmp_manhattan(pt[-1], end_loc)))
+        # incomplete_paths.sort(key=lambda pt: (len(pt), cmp_manhattan(pt[-1], end_loc)))
         active_path = incomplete_paths.pop()
         active_head = active_path[-1]
 
         if active_head == end_loc:
             complete_paths.append(active_path)
         else:
-            cur_cost_to_head = len(active_path)
-            cur_guess_total = walkable_points - cur_cost_to_head - cmp_manhattan(active_head, end_loc)
-            if cur_cost_to_head > longest_known_cost[active_head]:
-                longest_known_cost[active_head] = cur_cost_to_head
-                longest_guess_total_cost[active_head] = cur_guess_total
+            # cur_cost_to_head = len(active_path)
+            # # cur_guess_total = walkable_points - cur_cost_to_head - cmp_manhattan(active_head, end_loc)
+            # if cur_cost_to_head > longest_known_cost[active_head]:
+            #     longest_known_cost[active_head] = cur_cost_to_head
+            #     # longest_guess_total_cost[active_head] = cur_guess_total
             new_paths = []
             for d in directions:
                 if trail_info[active_head + d] != '#':
@@ -178,6 +178,14 @@ def path_total_weight(i_path):
 # assuming that each sub path is in path_weights twice, once forwards and once backwards
 trail_total_weight = sum([v for v in path_weights.values()]) / 2
 
+neighbor_hash = {}
+for k, v in path_weights.items():
+    lk, rk = k
+    if lk not in neighbor_hash.keys():
+        neighbor_hash[lk] = [rk]
+    else:
+        neighbor_hash[lk].append(rk)
+
 
 def pathy_long_a_star(i_start, i_end):
     incomplete_paths = [[i_start]]
@@ -186,18 +194,18 @@ def pathy_long_a_star(i_start, i_end):
 
     best_found = -1
 
-    longest_known_cost = {}
-    longest_guess_total_cost = {}
-    for j in junctions:
-        longest_guess_total_cost[j] = -1
-        longest_known_cost[j] = -1
-    longest_known_cost[i_start] = -1
-    longest_known_cost[i_end] = -1
-    longest_guess_total_cost[i_start] = -1
-    longest_guess_total_cost[i_end] = -1
+    # longest_known_cost = {}
+    # longest_guess_total_cost = {}
+    # for j in junctions:
+    #     longest_guess_total_cost[j] = -1
+    #     longest_known_cost[j] = -1
+    # longest_known_cost[i_start] = -1
+    # longest_known_cost[i_end] = -1
+    # longest_guess_total_cost[i_start] = -1
+    # longest_guess_total_cost[i_end] = -1
 
     while incomplete_paths:
-        incomplete_paths.sort(key=lambda pt: path_total_weight(pt))
+        # incomplete_paths.sort(key=lambda pt: path_total_weight(pt))
         active_path = incomplete_paths.pop()
         active_head = active_path[-1]
 
@@ -208,22 +216,20 @@ def pathy_long_a_star(i_start, i_end):
                 print(x_tot)
                 complete_paths.append(active_path)
         else:
-            cur_cost_to_head = path_total_weight(active_path)
-            cur_guess_total = trail_total_weight - cur_cost_to_head
-            if cur_cost_to_head > longest_known_cost[active_head]:
-                longest_known_cost[active_head] = cur_cost_to_head
-                longest_guess_total_cost[active_head] = cur_guess_total
-            new_paths = []
-            neighbors = [k[1] for k, v in path_weights.items() if k[0] == active_head and k[1] not in active_path]
-            for ng in neighbors:
-                new_path = active_path[::]
-                new_path.append(ng)
-                new_paths.append(new_path)
-            if len(new_paths) == 0:
+            # cur_cost_to_head = path_total_weight(active_path)
+            # cur_guess_total = trail_total_weight - cur_cost_to_head
+            # if cur_cost_to_head > longest_known_cost[active_head]:
+            #     longest_known_cost[active_head] = cur_cost_to_head
+            #     longest_guess_total_cost[active_head] = cur_guess_total
+            # neighbors = [k[1] for k, v in path_weights.items() if k[0] == active_head and k[1] not in active_path]
+            neighbors = neighbor_hash[active_head]
+            if len(neighbors) == 0:
                 dead_end_paths.append(active_path)
-            else:
-                for np in new_paths:
-                    incomplete_paths.append(np)
+            for ng in neighbors:
+                if ng not in active_path:
+                    new_path = active_path[::]
+                    new_path.append(ng)
+                    incomplete_paths.append(new_path)
 
     return complete_paths
 
