@@ -2,8 +2,8 @@ from collections import deque
 
 long_string = open('09_input').read()
 
-disk_map = list(map(int, "2333133121414131402"))  # long_string
-# disk_map = list(map(int, long_string))  #long_string
+# disk_map = list(map(int, "2333133121414131402"))  # long_string
+disk_map = list(map(int, long_string))  #long_string
 
 files = [v for (ix, v) in enumerate(disk_map) if ix % 2 == 0]
 blanks = deque([v for (ix, v) in enumerate(disk_map) if ix % 2 != 0])
@@ -77,16 +77,29 @@ def ix_of_earliest_blank_run_of_size(i_sz):
 search_item = full_list[-1]
 search_len = 0
 
-for rev_trav_ix in range(len(full_list))[::-1]:
-    if full_list[rev_trav_ix] == search_item:
+rev_trav_ix = len(full_list) - 1
+
+while rev_trav_ix:
+    assert(search_item != '.')
+    cur_item = full_list[rev_trav_ix]
+    if cur_item == search_item:
         search_len += 1
     else:
-        space_res = ix_of_earliest_blank_run_of_size(search_len)
-        if space_res:
+        swap_start_ix = ix_of_earliest_blank_run_of_size(search_len)
+        if swap_start_ix and swap_start_ix <= rev_trav_ix + search_len:
             for swap_ix in range(search_len):
-                full_list[space_res + swap_ix] = search_item
-                full_list[rev_trav_ix + swap_ix] = '.'
-
-        if full_list[rev_trav_ix] != '.':
-            search_item = full_list[rev_trav_ix]
+                full_list[swap_start_ix + swap_ix] = search_item
+                full_list[rev_trav_ix + 1 + swap_ix] = '.'
+        search_item = None
+        search_len = 0
+        if cur_item != '.':
+            search_item = cur_item
             search_len = 1
+    rev_trav_ix -= 1
+
+checksum2 = 0
+for i in range(len(full_list)):
+    if full_list[i] != '.':
+        checksum2 += i * full_list[i]
+
+print(checksum2)
