@@ -2,7 +2,7 @@ from collections import deque
 
 long_string = open('09_input').read()
 
-# disk_map = list(map(int, "2333133121414131402"))  # long_string
+# disk_map = list(map(int, "48274728818"))  # long_string
 disk_map = list(map(int, long_string))  #long_string
 
 files = [v for (ix, v) in enumerate(disk_map) if ix % 2 == 0]
@@ -78,21 +78,25 @@ search_item = full_list[-1]
 search_len = 0
 
 rev_trav_ix = len(full_list) - 1
+attempted_set = set()
 
 while rev_trav_ix:
     assert(search_item != '.')
+    # print(full_list)
+    # print(rev_trav_ix, search_item, search_len)
     cur_item = full_list[rev_trav_ix]
     if cur_item == search_item:
         search_len += 1
     else:
+        attempted_set.add(search_item)
         swap_start_ix = ix_of_earliest_blank_run_of_size(search_len)
-        if swap_start_ix and swap_start_ix <= rev_trav_ix + search_len:
+        if swap_start_ix and swap_start_ix <= rev_trav_ix:
             for swap_ix in range(search_len):
                 full_list[swap_start_ix + swap_ix] = search_item
                 full_list[rev_trav_ix + 1 + swap_ix] = '.'
         search_item = None
         search_len = 0
-        if cur_item != '.':
+        if cur_item != '.' and cur_item not in attempted_set:
             search_item = cur_item
             search_len = 1
     rev_trav_ix -= 1
