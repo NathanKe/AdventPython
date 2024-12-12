@@ -79,6 +79,44 @@ def directional_fences(i_region):
     return dir_fences
 
 
+def sub_region_fencer(i_region):
+    MIN_ROW = min(map(lambda cp: cp.real, i_region))
+    MIN_COL = min(map(lambda cp: cp.imag, i_region))
+    MAX_ROW = max(map(lambda cp: cp.real, i_region))
+    MAX_COL = max(map(lambda cp: cp.imag, i_region))
+
+    sub_def_dict = defaultdict(lambda: ".")
+
+    out_fence_count = 0
+
+    for loc in i_region:
+        sub_def_dict[loc] = 'X'
+
+    # Left to Right vertical slice
+    for right_slice_index in range(int(MIN_COL), int(MAX_COL) + 2):
+        last_fence_type = None
+        for row_index in range(int(MIN_ROW), int(MAX_ROW + 1)):
+            cur_slice = sub_def_dict[row_index + 1j * (right_slice_index - 1)] \
+                        + sub_def_dict[row_index + 1j * right_slice_index]
+            if cur_slice == last_fence_type:
+                pass
+            else:
+                if cur_slice != ".." and cur_slice != "XX":
+                    out_fence_count += 1
+                last_fence_type = cur_slice
+
+    for bottom_slice_index in range(int(MIN_ROW), int(MAX_ROW + 2)):
+        last_fence_type = None
+        for col_index in range(int(MIN_COL), int(MAX_COL) + 1):
+            cur_slice = sub_def_dict[bottom_slice_index - 1 + col_index * 1j] \
+                        + sub_def_dict[bottom_slice_index + col_index * 1j]
+            if cur_slice == last_fence_type:
+                pass
+            else:
+                if cur_slice != ".." and cur_slice != "XX":
+                    out_fence_count += 1
+                last_fence_type = cur_slice
+    return out_fence_count
 
 
-
+print(sum(map(lambda li: len(li) * sub_region_fencer(li), full_regions)))
