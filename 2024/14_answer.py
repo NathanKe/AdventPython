@@ -1,3 +1,4 @@
+import math
 import re
 from itertools import product
 from collections import defaultdict
@@ -35,12 +36,16 @@ walked_robots = [walk_robot(r, 100) for r in robots]
 quad1, quad2, quad3, quad4 = quadrator(WIDTH, HEIGHT)
 
 
-q1_r = [r for r in walked_robots if (r[0], r[1]) in quad1]
-q2_r = [r for r in walked_robots if (r[0], r[1]) in quad2]
-q3_r = [r for r in walked_robots if (r[0], r[1]) in quad3]
-q4_r = [r for r in walked_robots if (r[0], r[1]) in quad4]
+def entropy(i_robots):
+    q1_r = [r for r in i_robots if (r[0], r[1]) in quad1]
+    q2_r = [r for r in i_robots if (r[0], r[1]) in quad2]
+    q3_r = [r for r in i_robots if (r[0], r[1]) in quad3]
+    q4_r = [r for r in i_robots if (r[0], r[1]) in quad4]
 
-print(len(q1_r) * len(q2_r) * len(q3_r) * len(q4_r))
+    return len(q1_r) * len(q2_r) * len(q3_r) * len(q4_r)
+
+
+print(entropy(walked_robots))
 
 
 def robot_printer(i_robots):
@@ -56,15 +61,16 @@ def robot_printer(i_robots):
 
 
 def tree_poss_printer(i_robots):
-    for i in range(10000):
+    min_entropy = math.inf
+    for i in range(WIDTH * HEIGHT):
         i_robots = [walk_robot(r, 1) for r in i_robots]
-        q1_r = [r for r in i_robots if (r[0], r[1]) in quad1]
-        q2_r = [r for r in i_robots if (r[0], r[1]) in quad2]
-        q3_r = [r for r in i_robots if (r[0], r[1]) in quad3]
-        q4_r = [r for r in i_robots if (r[0], r[1]) in quad4]
-        if i % 1000 == 0:
+        cur_entropy = entropy(i_robots)
+        if i % 100 == 0:
             print(i)
-        if len(q1_r) < len(q2_r) and len(q1_r) < len(q4_r) and len(q3_r) < len(q2_r) and len(q3_r) < len(q4_r):
-            print(i)
+        if cur_entropy < min_entropy:
+            print(i + 1)
             robot_printer(i_robots)
+            min_entropy = cur_entropy
 
+
+tree_poss_printer(robots)
