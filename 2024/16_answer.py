@@ -82,7 +82,6 @@ def value_fill_paths():
     return return_paths
 
 
-
 min_paths = value_fill_paths()
 
 seats = len(set([tu[0] for min_p in min_paths for tu in min_p]))
