@@ -38,3 +38,4 @@ def sub_beam_count(i_b_c, i_b_r):
         countHash[(i_b_c, i_b_r)] = sub_res
         return sub_res
 
+print(sub_beam_count(start_beam, 0))
