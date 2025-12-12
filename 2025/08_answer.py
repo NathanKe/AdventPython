@@ -70,23 +70,32 @@ circ_lens.sort(reverse=True)
 print(circ_lens[0] * circ_lens[1] * circ_lens[2])
 
 
+full_connect = False
 for jp in junction_pairs:
-    cur_pair = jp
     found = False
     for circ in circuits:
         if not found:
-            left_in = cur_pair[0] in circ
-            right_in = cur_pair[1] in circ
+            left_in = jp[0] in circ
+            right_in = jp[1] in circ
             if left_in and right_in:
                 found = True
             elif left_in:
-                circ.append(cur_pair[1])
+                circ.append(jp[1])
                 found = True
             elif right_in:
-                circ.append(cur_pair[0])
+                circ.append(jp[0])
                 found = True
     if not found:
-        circuits.append(list(cur_pair))
+        circuits.append(list(jp))
+    circuits = redux(circuits)
+
+    circuits.sort(key=lambda c: len(c), reverse=True)
+    biggest_length = len(circuits[0])
+    if biggest_length == len(junctions):
+        full_connect = True
 
 
+    if full_connect:
+        print(jp[0][0]*jp[1][0])
+        break
 
